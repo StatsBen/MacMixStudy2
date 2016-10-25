@@ -7,3 +7,5 @@ Want to run this app? Clone the repo and then run:
  + `npm install`
  + `npm run build`
  + `npm run start`
+ 
+Barring any errors (which will appear in your console), the app should now be running at `localhost:8080`
