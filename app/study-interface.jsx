@@ -12,12 +12,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+var StaircaseTask = require('./staircase-task.jsx');
+
 var StudyInterface = React.createClass({
 
   render: function() {
     return(
       <div id="app">
         <h1>T E S T</h1>
+        <StaircaseTask />
       </div>
     );
   }
