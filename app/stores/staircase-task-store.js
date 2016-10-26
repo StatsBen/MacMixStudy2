@@ -1,0 +1,41 @@
+/**
+ *  This store manages all the data that will be collected by the
+ *   Macaron Mix Study II interface. It'll record all the data,
+ *   and manage all the data that will be displayed in the app.
+ *    This is the central hub for all the information flowing
+ *     throughout the app!
+ *
+ *  Author: Ben Clark - Oct. 2016
+ **/
+import React from 'react';
+import ReacDOM from 'react-dom';
+import Reflux from 'reflux';
+
+var StaircaseTaskActions = Reflux.createActions([
+  'nameStuffHere',
+  'addMoreWithCommas'
+]);
+
+var StaircaseTaskStore = Reflux.createStore({
+
+  listenables: [StaircaseTaskActions],
+
+  init: function() {
+    this._usefulInfo = [];  // Initialize properties/fields like this!
+    // Initialize all the data and get ready to collect info!
+  },
+
+  nameStuffHere: function() {
+    //do nothing
+  },
+
+  addMoreWithCommas: function() {
+    // still do nothing!
+  }
+
+});
+
+module.exports = {
+  actions:StaircaseTaskActions,
+  store:StaircaseTaskStore
+};
