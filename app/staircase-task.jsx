@@ -7,11 +7,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+var AutoPlayButton = require('./auto-play-button.jsx');
+
 var StaircaseTask = React.createClass({
 
   render: function() {
     return(
-      <h2>Better Test...</h2>
+      <div id="staircase-task">
+        <h2>Better Test...</h2>
+        <AutoPlayButton />
+      </div>
     );
   }
 

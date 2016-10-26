@@ -21458,6 +21458,8 @@
 	 *
 	 *  Author: Ben Clark - Oct. 2016
 	 **/
+	var StaircaseTask = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./staircase-task.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
 	var StudyInterface = _react2.default.createClass({
 	  displayName: 'StudyInterface',
 
@@ -21470,7 +21472,8 @@
 	        'h1',
 	        null,
 	        'T E S T'
-	      )
+	      ),
+	      _react2.default.createElement(StaircaseTask, null)
 	    );
 	  }
 
