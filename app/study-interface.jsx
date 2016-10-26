@@ -19,7 +19,7 @@ var StudyInterface = React.createClass({
   render: function() {
     return(
       <div id="app">
-        <h1>T E S T</h1>
+      <p>write a whole bunch of instructions here...</p>
         <StaircaseTask />
       </div>
     );

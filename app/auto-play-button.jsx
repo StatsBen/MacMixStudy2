@@ -11,7 +11,11 @@ var AutoPlayButton = React.createClass({
 
   render: function() {
     return(
-      <p>Testing the autoplay button</p>
+      <p>
+        Auto Play On/Off 
+        <input type="radio" name="autoplay" value="on/off" className="off">
+        </input>
+      </p>
     );
   }
 
