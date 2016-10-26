@@ -115,6 +115,10 @@ p {
   border-radius: 10px;
 }
 
+#staircase-task-header {
+  text-align: center;
+}
+
 #icon-player-container {
   display: block;
   position: relative;
@@ -126,4 +130,17 @@ p {
 
 #target-icon {
   float: left;
+}
+
+#ene-container {
+  display: block;
+  position: relative;
+  float: left;
+  width: 39%;
+  height: 80px;
+  background: red;
+}
+
+#your-icon {
+  float: right;
 }

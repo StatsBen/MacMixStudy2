@@ -1,13 +1,14 @@
 /**
  *  This React component will be a large button that allows a user
- *   to see and preview the target icon that they will be matching.
+ *   to see and preview their  icon that they will be matching to the
+ *    target icon.
  *
  *  Author: Ben Clark - Oct. 2016
  **/
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var TargetIcon = React.createClass({
+var YourIcon = React.createClass({
 
   /**
    *  Play the icon by:
@@ -29,8 +30,8 @@ var TargetIcon = React.createClass({
     }
 
     // change the icon's class to "playing"
-    document.getElementById("target-icon").className = "icon playing";
-    document.getElementById("staircase-task").nowPlaying = "target-audio"
+    document.getElementById("your-icon").className = "icon playing";
+    document.getElementById("staircase-task").nowPlaying = "your-audio"
 
     // play the icon
     document.getElementById("target-audio").play();
@@ -47,19 +48,19 @@ var TargetIcon = React.createClass({
    **/
   _stopPlaying: function() {
     //STUB TODO
-    document.getElementById("target-icon").className = "icon not-playing";
+    document.getElementById("your-icon").className = "icon not-playing";
     document.getElementById("staircase-task").nowPlaying = "none"
     alert('done playing...');
   },
 
   render: function() {
     return(
-      <div id="target-icon" className="icon not-playing" onClick={this._play}>
-        <p id="target-icon-label" className="icon-label">Target Icon</p>
-        <p id="target-icon-instructions" className="icon-instructions">
+      <div id="your-icon" className="icon not-playing" onClick={this._play}>
+        <p id="your-icon-label" className="icon-label">Your Icon</p>
+        <p id="your-icon-instructions" className="icon-instructions">
           Double Click to Preview
         </p>
-        <audio id="target-audio">
+        <audio id="your-audio">
           <source src="./../icons/icon2.wav" type="audio/wav" />
         </audio>
       </div>
@@ -68,4 +69,4 @@ var TargetIcon = React.createClass({
 
 });
 
-module.exports = TargetIcon;
+module.exports = YourIcon;
