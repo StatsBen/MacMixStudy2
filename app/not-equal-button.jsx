@@ -9,9 +9,17 @@ import ReactDOM from 'react-dom';
 
 var NotEqualButton = React.createClass({
 
+  _handleClick: function() {
+    // TODO
+  },
+
   render: function() {
     return(
-      <h2>test 2</h2>
+      <div id="not-equal-button" className="control-button">
+        <p id="not-equal-button-text" className="control-button-text">
+          Not Equal
+        </p>
+      </div>
     );
   }
 

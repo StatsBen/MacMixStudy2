@@ -12,6 +12,7 @@ var TargetIcon = require('./target-icon.jsx');
 var YourIcon = require('./your-icon.jsx');
 var EqualButton = require('./equal-button.jsx');
 var NotEqualButton = require('./not-equal-button.jsx');
+var SubmitButton = require('./submit-button.jsx');
 var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
 var StaircaseTask = React.createClass({
@@ -26,6 +27,7 @@ var StaircaseTask = React.createClass({
           <div id="ene-container">
             <EqualButton />
             <NotEqualButton />
+            <SubmitButton />
           </div>
           <YourIcon />
         </div>

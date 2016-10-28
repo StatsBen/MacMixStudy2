@@ -11,7 +11,9 @@ var EqualButton = React.createClass({
 
   render: function() {
     return(
-      <h2>test</h2>
+      <div id="equal-button" className="control-button">
+        <p id="equal-button-text" className="control-button-text">Equal</p>
+      </div>
     );
   }
 });

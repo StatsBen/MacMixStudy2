@@ -12,8 +12,11 @@ import ReacDOM from 'react-dom';
 import Reflux from 'reflux';
 
 var StaircaseTaskActions = Reflux.createActions([
-  'nameStuffHere',
-  'addMoreWithCommas'
+  'previewTargetIcon',
+  'previewYourIcon',
+  'clickEqual',
+  'clickNotEqual',
+  'submitTask'
 ]);
 
 var StaircaseTaskStore = Reflux.createStore({
@@ -25,12 +28,24 @@ var StaircaseTaskStore = Reflux.createStore({
     // Initialize all the data and get ready to collect info!
   },
 
-  nameStuffHere: function() {
+  previewTargetIcon: function() {
     //do nothing
   },
 
-  addMoreWithCommas: function() {
-    // still do nothing!
+  previewYourIcon: function() {
+    //do nothing
+  },
+
+  clickEqual: function() {
+    //do nothing
+  },
+
+  clickNotEqual: function() {
+    //do nothing
+  },
+
+  submitTask: function() {
+    //do nothing
   }
 
 });

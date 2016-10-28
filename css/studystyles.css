@@ -74,6 +74,32 @@ p {
   text-align: center;
 }
 
+.control-button {
+  display: block;
+  position: relative;
+  width: 60%;
+  height: auto;
+  padding: 0;
+  margin-left: 20%;
+  margin-top: none;
+  text-align: center;
+  background: blue;
+  border-radius: 5px;
+  box-shadow: -3px 3px 5px #888888;
+}
+
+.control-button-text {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  margin: 10px;
+}
+
+.control-unavailable {
+  
+}
+
 
 
 
