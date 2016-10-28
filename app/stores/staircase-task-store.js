@@ -144,7 +144,7 @@ var StaircaseTaskStore = Reflux.createStore({
       console.log(this._studyRecord);
 
       // Start the new task
-      
+
     }
 
     else {
@@ -176,12 +176,13 @@ var StaircaseTaskStore = Reflux.createStore({
     this._approachingTarget = false;
     this._currentStairPhase++;
     var hasEnoughSteps = this._currentStairPhase == this._nSteps;
-    this._canSubmit = true;
-    this._openForSubmission();
-    if (hasEnoughSteps && this._isEven(this._nSteps)) {
-      this._disableNotEqualButton();
-    } else {
-      this._disableEqualButton();
+    if (hasEnoughSteps) {
+      this._canSubmit = true;
+      this._openForSubmission();
+      if (this._isEven(this._nSteps))
+        this._disableNotEqualButton();
+      else
+        this._disableEqualButton();
     }
     this._currentStaircaseTask.push(this._currentMix);
     console.log("changed direction at: " + this._currentMix);
@@ -200,7 +201,7 @@ var StaircaseTaskStore = Reflux.createStore({
   _openForSubmission: function() {
     // TODO
     document.getElementById("submit-button").className = "control-button";
-  }
+  },
 
   _isEven: function(x) {
     !(x & 1);
