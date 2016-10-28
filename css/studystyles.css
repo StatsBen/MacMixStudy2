@@ -53,6 +53,10 @@ p {
   cursor: default;
 }
 
+.icon:hover {
+  background: #FDFFCC;
+}
+
 .icon-label {
   display: block;
   width: 100%;
@@ -86,6 +90,14 @@ p {
   background: #CCCCCC;
   border-radius: 5px;
   box-shadow: -3px 3px 5px #888888;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  cursor: default;
+}
+
+.control-button:hover {
+  background: #FDFFCC;
 }
 
 .control-button-text {
