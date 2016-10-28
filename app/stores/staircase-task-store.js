@@ -38,14 +38,17 @@ var StaircaseTaskStore = Reflux.createStore({
 
   clickEqual: function() {
     //do nothing
+    alert('eq test successful!');
   },
 
   clickNotEqual: function() {
     //do nothing
+    alert('ne test successful!');
   },
 
-  submitTask: function() {
+  clickSubmit: function() {
     //do nothing
+    alert('submit test successful!');
   }
 
 });

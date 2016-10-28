@@ -6,17 +6,21 @@
  **/
 import React from 'react';
 import ReactDOM from 'react-dom';
+var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
 var NotEqualButton = React.createClass({
 
   _handleClick: function() {
-    // TODO
+    StaircaseTaskStore.actions.clickNotEqual();
   },
 
   render: function() {
     return(
-      <div id="not-equal-button" className="control-button">
-        <p id="not-equal-button-text" className="control-button-text">
+      <div id="not-equal-button"
+           className="control-button"
+           onClick={this._handleClick}>
+        <p id="not-equal-button-text"
+           className="control-button-text">
           Not Equal
         </p>
       </div>

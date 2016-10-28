@@ -24,7 +24,7 @@ var StaircaseTask = React.createClass({
         <AutoPlayButton />
         <div id="icon-player-container">
           <TargetIcon />
-          <div id="ene-container">
+          <div id="controls-container">
             <EqualButton />
             <NotEqualButton />
             <SubmitButton />
