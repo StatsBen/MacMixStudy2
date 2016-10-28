@@ -32,10 +32,14 @@ var StaircaseTaskStore = Reflux.createStore({
   init: function() {
     this._studyRecord = [];
     this._currentStaircaseTask = [];
-    this._currentIconNumber = 20; // counts down from 20
-    this._currentStairPhase = 5;  // counts down from 5
-    this._currentMix = 100;       // decrements and increments as they click
+    this._currentIconNumber = 1;  // counts down from 20
+    this._currentStairPhase = 1;  // counts down from 5
+    this._totalNIcons = 2; // TODO Change this to the actual number after testing!
+    this._nSteps = 3;      // TODO Change this after piloting!
+    this._approachingTarget = true;
+    this._currentMix = 0;         // decrements and increments as they click
                                   //  equal and not-equal
+
     this._globalTStart = new Date().getTime()/(1000*60); //minutes since epoch
     this._currentTStart = new Date().getTime()/(1000*60);
     this._totalClicks = 0;        // number of clicks used in the study...
@@ -83,7 +87,16 @@ var StaircaseTaskStore = Reflux.createStore({
    *     - initiating autoplay if it's turned on!
    **/
   clickEqual: function() {
-    alert('eq test successful!');
+
+    // Case 1: We're approaching the target icon
+    if (this._approachingTarget) {
+      this._moveTowardsTarget();
+    }
+    // Case 2: We're moving away from the target
+    else {
+      this._changeDirection();
+      this._moveAwayFromTarget();
+    }
   },
 
   /**
@@ -97,7 +110,15 @@ var StaircaseTaskStore = Reflux.createStore({
    *     - initiating autoplay if it's turned on!
    **/
   clickNotEqual: function() {
-    alert('ne test successful!');
+    // Case 1: We're approaching the target icon
+    if (this._approachingTarget) {
+      this._changeDirection();
+      this._moveTowardsTarget();
+    }
+    // Case 2: We're headed away from the target icon
+    else {
+      this._moveAwayFromTarget();
+    }
   },
 
   /**
@@ -112,7 +133,77 @@ var StaircaseTaskStore = Reflux.createStore({
    *     - displaying a short congratulatory message!
    **/
   clickSubmit: function() {
-    alert('submit test successful!');
+
+    if (this._canSubmit) {
+
+       // Wrap up the last iteration...
+      var newT = new Date().getTime()/(1000*60);
+      var t = newT - this._currentTStart;
+      this._currentStaircaseTask.push("total time: " + t);
+      this._studyRecord.push(this._currentStaircaseTask);
+      console.log(this._studyRecord);
+
+      // Start the new task
+      
+    }
+
+    else {
+      alert("Sorry, the task isn't complete yet. Please continue with the activity.");
+    }
+  },
+
+
+  /**
+   *     BEGIN PRIVATE FUNCTIONS
+   * most of these are too short to merit extensive documentation...
+   **/
+
+  _moveTowardsTarget: function() {
+    var stepSize = Math.round(10/this._currentStairPhase);
+    this._currentMix += stepSize;
+    this._currentStaircaseTask.push(this._currentMix);
+    console.log("made a step in the right direction!  " + this._currentMix);
+  },
+
+  _moveAwayFromTarget: function() {
+    var stepSize = Math.round(10/this._currentStairPhase);
+    this._currentMix -= stepSize;
+    this._currentStaircaseTask.push(this._currentMix);
+    console.log("Moved away from target...  " + this._currentMix);
+  },
+
+  _changeDirection: function() {
+    this._approachingTarget = false;
+    this._currentStairPhase++;
+    var hasEnoughSteps = this._currentStairPhase == this._nSteps;
+    this._canSubmit = true;
+    this._openForSubmission();
+    if (hasEnoughSteps && this._isEven(this._nSteps)) {
+      this._disableNotEqualButton();
+    } else {
+      this._disableEqualButton();
+    }
+    this._currentStaircaseTask.push(this._currentMix);
+    console.log("changed direction at: " + this._currentMix);
+  },
+
+  _disableEqualButton: function() {
+    // TODO
+    document.getElementById("equal-button").className += " unavailable";
+  },
+
+  _disableNotEqualButton: function() {
+    // TODO
+    document.getElementById("not-equal-button").className += " unavailable";
+  },
+
+  _openForSubmission: function() {
+    // TODO
+    document.getElementById("submit-button").className = "control-button";
+  }
+
+  _isEven: function(x) {
+    !(x & 1);
   }
 
 });
