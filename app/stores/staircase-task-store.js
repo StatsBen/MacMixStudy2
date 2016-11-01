@@ -32,8 +32,8 @@ var StaircaseTaskStore = Reflux.createStore({
   init: function() {
     this._studyRecord = [];
     this._currentStaircaseTask = [];
-    this._currentIconNumber = 1;  // counts down from 20
-    this._currentStairPhase = 1;  // counts down from 5
+    this._currentIconNumber = 1;  // counts up to 20
+    this._currentStairPhase = 1;  // counts up to 5
     this._totalNIcons = 2; // TODO Change this to the actual number after testing!
     this._nSteps = 3;      // TODO Change this after piloting!
     this._approachingTarget = true;
