@@ -8,7 +8,7 @@
  *  Author: Ben Clark - Oct. 2016
  **/
 import React from 'react';
-import ReacDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import Reflux from 'reflux';
 
 var StaircaseTaskActions = Reflux.createActions([
@@ -57,7 +57,9 @@ var StaircaseTaskStore = Reflux.createStore({
     this._targetIcons = ['icon1.wav',
                          'icon2.wav',
                          'icon3.wav',
-                         'icon4.wav'
+                         'icon4.wav',
+                         'icon5.wav',
+                         'icon6.wav'
                         ]
 
     console.log(this._studyRecord);
@@ -73,21 +75,31 @@ var StaircaseTaskStore = Reflux.createStore({
   playTarget: function() {
     // First, stop the other icon if it's already playing...
     if (this._currentlyPlaying == "yours"); {
-      Document.getElementById("your-icon").className = "icon not-playing";
-      Document.getElementById("your-source").stop();
+      document.getElementById("your-icon").className = "icon not-playing";
+      if (document.getElementById("your-source"))
+        document.getElementById("your-source").stop();
       this._currentlyPlaying = "none";
     }
     // Play the target icon
-    this._currentlyPlaying = "target";
-    Document.getElementById("target-icon").className = "icon playing";
-    var targetAudio = new Audio(this._targetIcons[this._currentIconNumber]);
-    targetAudio.play();
+    //this._currentlyPlaying = "target";
+    document.getElementById("target-icon").className = "icon playing";
+    var iconURL = 'icons/' + this._targetIcons[this._currentIconNumber];
+    var targetAudio = new Audio(iconURL);
+    targetAudio.addEventListener('loadedmetadata', function() {
+      console.log(targetAudio.duration);
+      targetAudio.addEventListener('ended', function() {
+            document.getElementById("target-icon").className = "icon not-playing";
+      });
+      targetAudio.play();
+    });
+    // console.log(targetAudio.duration);
+    // targetAudio.play();
+    // console.log(targetAudio.ended);
+    // targetAudio.onEnded = function(){
+    //   document.getElementById("target-icon").className = "icon not-playing";
+    // };
 
-    while (targetAudio.paused = false) {
-      console.log('still playing...');
-    }
-    Document.getElementById("target-icon").className = "icon not-playing";
-    this._currentlyPlaying = "none";
+    //this._currentlyPlaying = "none";
 
     // Record that...
     this._currentStaircaseTask.push("previewed target icon");

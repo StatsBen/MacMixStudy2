@@ -61,6 +61,10 @@ p {
   background: orange;
 }
 
+.playing:hover {
+  background: orange;
+}
+
 .icon-label {
   display: block;
   width: 100%;

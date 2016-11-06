@@ -24,6 +24,7 @@ var YourIcon = React.createClass({
     return(
       <div id="your-icon"
            className="icon not-playing"
+           ref="yourIcon"
            onDoubleClick={this._play}>
         <p id="your-icon-label" className="icon-label">Your Icon</p>
         <p id="your-icon-instructions" className="icon-instructions">
