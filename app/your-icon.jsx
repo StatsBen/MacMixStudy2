@@ -7,6 +7,7 @@
  **/
 import React from 'react';
 import ReactDOM from 'react-dom';
+var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
 var YourIcon = React.createClass({
 
@@ -21,7 +22,9 @@ var YourIcon = React.createClass({
 
   render: function() {
     return(
-      <div id="your-icon" className="icon not-playing" onClick={this._play}>
+      <div id="your-icon"
+           className="icon not-playing"
+           onDoubleClick={this._play}>
         <p id="your-icon-label" className="icon-label">Your Icon</p>
         <p id="your-icon-instructions" className="icon-instructions">
           Double Click to Preview

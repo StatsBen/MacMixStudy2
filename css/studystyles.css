@@ -57,6 +57,10 @@ p {
   background: #FDFFCC;
 }
 
+.playing {
+  background: orange;
+}
+
 .icon-label {
   display: block;
   width: 100%;

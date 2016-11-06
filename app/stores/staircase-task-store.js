@@ -71,6 +71,25 @@ var StaircaseTaskStore = Reflux.createStore({
    *    - reset that all when it's done!
    **/
   playTarget: function() {
+    // First, stop the other icon if it's already playing...
+    if (this._currentlyPlaying == "yours"); {
+      Document.getElementById("your-icon").className = "icon not-playing";
+      Document.getElementById("your-source").stop();
+      this._currentlyPlaying = "none";
+    }
+    // Play the target icon
+    this._currentlyPlaying = "target";
+    Document.getElementById("target-icon").className = "icon playing";
+    var targetAudio = new Audio(this._targetIcons[this._currentIconNumber]);
+    targetAudio.play();
+
+    while (targetAudio.paused = false) {
+      console.log('still playing...');
+    }
+    Document.getElementById("target-icon").className = "icon not-playing";
+    this._currentlyPlaying = "none";
+
+    // Record that...
     this._currentStaircaseTask.push("previewed target icon");
   },
 
@@ -143,6 +162,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var source = audioCtx.createBufferSource();
 		source.buffer = myAudioBuffer;
 		source.connect(audioCtx.destination);
+    source.id = "your-source";
 		source.start();
   },
 
@@ -221,66 +241,6 @@ var StaircaseTaskStore = Reflux.createStore({
     }
   },
 
-  playYours (whichIcon) {
-		// https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
-		var trackLength = 3; //s
-		var channels = 1; // Standard mono-audio
-		var sampleRate = 44100; //Hz (44100 is pretty universal)
-		var bitDepth = 8; // Low-fi...
-		var bitRate = channels * sampleRate * bitDepth;
-		var sampleSize = (bitDepth * channels) / (8); //bytes
-		var nSamples = sampleRate * trackLength;
-		var totalSize = (nSamples * sampleSize) + 44;
-
-		var iconStore = VTIconStore.store.getInitialState()[editor];
-		var ampParams = iconStore.parameters.amplitude.data;
-		var freqParams = iconStore.parameters.frequency.data;
-
-		var range = Math.pow(2, bitDepth - 1) - 2;
-							// subtract 2 to avoid any clipping.
-
-		var phaseIntegral = 0;
-		var dt_in_s = 1.0/sampleRate;
-
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-		var source = audioCtx.createBufferSource();
-		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
-		var buffer = myAudioBuffer.getChannelData(0);
-
-		// calculate the speaker displacement at each frame
-		//  emulating a sinewave here...
-		for (var i=0; i<=nSamples; i=i+1) {
-
- 		  var t = ((i * 1000) / sampleRate);
-
-			var preAmp = getCurrentAmplitude(t, ampParams);
-			var amp = equalize(t, freqParams, preAmp);
-			var freq = getCurrentFrequency(t, freqParams); // instantaneous freq over t
-
-			if (i == 0) {
-				// phaseIntegral = frequency;
-			} else {
-				phaseIntegral += (freq)*dt_in_s;
-			}
-
-
-			var v = amp* Math.sin(2 * Math.PI * phaseIntegral);
-			var oscOffset = Math.round(range * v);
-
-			if (oscOffset < 0) {
-				oscOffset = ~(Math.abs(oscOffset));
-			}
-
-			// Range - Offset = WAV encoding of Offset... Weird!
-			buffer[(i*sampleSize)] = v; /*needs to be in range  -1 to 1 to work for AudioBufferSourceNode*/
-		}
-
-		var source = audioCtx.createBufferSource();
-		source.buffer = myAudioBuffer;
-		source.connect(audioCtx.destination);
-		source.start();
-  },
-
 
   /**
    *     BEGIN PRIVATE FUNCTIONS
@@ -302,7 +262,7 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   _changeDirection: function() {
-    this._approachingTarget = false;
+    this._approachingTarget = !this._approachingTarget;
     this._currentStairPhase++;
     var hasEnoughSteps = this._currentStairPhase == this._nSteps;
     if (hasEnoughSteps) {
