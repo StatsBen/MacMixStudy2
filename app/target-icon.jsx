@@ -10,46 +10,12 @@ import ReactDOM from 'react-dom';
 var TargetIcon = React.createClass({
 
   /**
-   *  Play the icon by:
-   *    - stop playing whatever else might be playing
-   *    - change this icon's class to "playing"
-   *    - using the web-audio API to play the icon,
-   *    - call _endPlay() when it's done
+   *  Function exported to the staircase task store :/
+   *   Then this function just makes it visually obvious that it's playing.
    **/
   _play: function() {
-    // STUB  TODO
-
-    // stop playing whatever else might be playing
-    if (document.getElementById("staircase-task").nowPlaying != "none") {
-      // something else is playing... deal with that!
-      alert('other stuff is happening...');
-    } else {
-      // nothing else is playing, carry on!
-      alert('you are clear to go!');
-    }
-
-    // change the icon's class to "playing"
-    document.getElementById("target-icon").className = "icon playing";
-    document.getElementById("staircase-task").nowPlaying = "target-audio"
-
-    // play the icon
-    document.getElementById("target-audio").play();
-
-    // end playbakc when that's done...
-    this._stopPlaying();
-  },
-
-
-
-  /**
-   * End the icon playback by:
-   *    - change it's class back to "not-playing"
-   **/
-  _stopPlaying: function() {
-    //STUB TODO
-    document.getElementById("target-icon").className = "icon not-playing";
-    document.getElementById("staircase-task").nowPlaying = "none"
-    alert('done playing...');
+    StaircaseTaskStore.actions.playTarget();
+    // TODO: Highlight the thing....
   },
 
   render: function() {

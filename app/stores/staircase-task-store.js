@@ -16,7 +16,9 @@ var StaircaseTaskActions = Reflux.createActions([
   'previewYourIcon',
   'clickEqual',
   'clickNotEqual',
-  'clickSubmit'
+  'clickSubmit',
+  'playTarget',
+  'playYours'
 ]);
 
 var StaircaseTaskStore = Reflux.createStore({
@@ -52,29 +54,96 @@ var StaircaseTaskStore = Reflux.createStore({
     this._studyRecord.push("begin study");
     this._studyRecord.push(this._globalTStart);
 
+    this._targetIcons = ['icon1.wav',
+                         'icon2.wav',
+                         'icon3.wav',
+                         'icon4.wav'
+                        ]
+
     console.log(this._studyRecord);
   },
 
   /**
-   *  "Preview Target Icon" will handle the playing of the target icon by:
+   *  "Play Target" will handle the playing of the target icon by:
    *    - stop playing whatever else might be playing
    *    - change this icon's class to "playing"
    *    - using the web-audio API to play the icon,
    *    - reset that all when it's done!
    **/
-  previewTargetIcon: function() {
+  playTarget: function() {
     this._currentStaircaseTask.push("previewed target icon");
   },
 
   /**
-   *  "Preview Your Icon" will play the current icon by:
+   *  "Play Yours" will play the current icon by:
    *    - stopping whatever else might be playing
    *    - changing this icon's class to "playing"
    *    - using the web-audio API to play the icon,
    *    - resetting that all when it's done!
+   *
+   *  Major credit to Oliver Schneider (UBC) for devising the way of
+   *   playing the icon hi-fi with the web-audio api using and a buffer!
    **/
-  previewYourIcon: function() {
+  playYours: function() {
     this._currentStaircaseTask.push("previewed their icon");
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
+		var trackLength = 3; //s
+		var channels = 1; // Standard mono-audio
+		var sampleRate = 44100; //Hz (44100 is pretty universal)
+		var bitDepth = 8; // Low-fi...
+		var bitRate = channels * sampleRate * bitDepth;
+		var sampleSize = (bitDepth * channels) / (8); //bytes
+		var nSamples = sampleRate * trackLength;
+		var totalSize = (nSamples * sampleSize) + 44;
+
+		var iconStore = VTIconStore.store.getInitialState()[editor];
+		var ampParams = iconStore.parameters.amplitude.data;
+		var freqParams = iconStore.parameters.frequency.data;
+
+		var range = Math.pow(2, bitDepth - 1) - 2;
+							// subtract 2 to avoid any clipping.
+
+		var phaseIntegral = 0;
+		var dt_in_s = 1.0/sampleRate;
+
+		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		var source = audioCtx.createBufferSource();
+		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
+		var buffer = myAudioBuffer.getChannelData(0);
+
+		// calculate the speaker displacement at each frame
+		//  emulating a sinewave here...
+		for (var i=0; i<=nSamples; i=i+1) {
+
+ 		  var t = ((i * 1000) / sampleRate);
+
+			var preAmp = getCurrentAmplitude(t, ampParams);
+			var amp = equalize(t, freqParams, preAmp);
+			var freq = getCurrentFrequency(t, freqParams); // instantaneous freq over t
+
+			if (i == 0) {
+				// phaseIntegral = frequency;
+			} else {
+				phaseIntegral += (freq)*dt_in_s;
+			}
+
+
+			var v = amp* Math.sin(2 * Math.PI * phaseIntegral);
+			var oscOffset = Math.round(range * v);
+
+			if (oscOffset < 0) {
+				oscOffset = ~(Math.abs(oscOffset));
+			}
+
+			// Range - Offset = WAV encoding of Offset... Weird!
+			buffer[(i*sampleSize)] = v; /*needs to be in range  -1 to 1 to work for AudioBufferSourceNode*/
+		}
+
+		var source = audioCtx.createBufferSource();
+		source.buffer = myAudioBuffer;
+		source.connect(audioCtx.destination);
+		source.start();
   },
 
   /**
@@ -150,6 +219,66 @@ var StaircaseTaskStore = Reflux.createStore({
     else {
       alert("Sorry, the task isn't complete yet. Please continue with the activity.");
     }
+  },
+
+  playYours (whichIcon) {
+		// https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
+		var trackLength = 3; //s
+		var channels = 1; // Standard mono-audio
+		var sampleRate = 44100; //Hz (44100 is pretty universal)
+		var bitDepth = 8; // Low-fi...
+		var bitRate = channels * sampleRate * bitDepth;
+		var sampleSize = (bitDepth * channels) / (8); //bytes
+		var nSamples = sampleRate * trackLength;
+		var totalSize = (nSamples * sampleSize) + 44;
+
+		var iconStore = VTIconStore.store.getInitialState()[editor];
+		var ampParams = iconStore.parameters.amplitude.data;
+		var freqParams = iconStore.parameters.frequency.data;
+
+		var range = Math.pow(2, bitDepth - 1) - 2;
+							// subtract 2 to avoid any clipping.
+
+		var phaseIntegral = 0;
+		var dt_in_s = 1.0/sampleRate;
+
+		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		var source = audioCtx.createBufferSource();
+		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
+		var buffer = myAudioBuffer.getChannelData(0);
+
+		// calculate the speaker displacement at each frame
+		//  emulating a sinewave here...
+		for (var i=0; i<=nSamples; i=i+1) {
+
+ 		  var t = ((i * 1000) / sampleRate);
+
+			var preAmp = getCurrentAmplitude(t, ampParams);
+			var amp = equalize(t, freqParams, preAmp);
+			var freq = getCurrentFrequency(t, freqParams); // instantaneous freq over t
+
+			if (i == 0) {
+				// phaseIntegral = frequency;
+			} else {
+				phaseIntegral += (freq)*dt_in_s;
+			}
+
+
+			var v = amp* Math.sin(2 * Math.PI * phaseIntegral);
+			var oscOffset = Math.round(range * v);
+
+			if (oscOffset < 0) {
+				oscOffset = ~(Math.abs(oscOffset));
+			}
+
+			// Range - Offset = WAV encoding of Offset... Weird!
+			buffer[(i*sampleSize)] = v; /*needs to be in range  -1 to 1 to work for AudioBufferSourceNode*/
+		}
+
+		var source = audioCtx.createBufferSource();
+		source.buffer = myAudioBuffer;
+		source.connect(audioCtx.destination);
+		source.start();
   },
 
 

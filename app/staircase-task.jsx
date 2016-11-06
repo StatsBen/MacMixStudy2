@@ -27,7 +27,6 @@ var StaircaseTask = React.createClass({
           <div id="controls-container">
             <EqualButton />
             <NotEqualButton />
-            <SubmitButton />
           </div>
           <YourIcon />
         </div>

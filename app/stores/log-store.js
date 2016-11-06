@@ -8,10 +8,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Reflux from 'reflux';
 
-var Firebase = require('firebase');
-var FIREBASE_URL = "https://shining-heat-4904.firebaseio.com";
-var FIREBASE_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE0NDA1MjY5NDMsImQiOnsidWlkIjoib2xpdmVyLW1hY2Fyb24ifSwidiI6MH0.ICq8i8FMOMTL4VaEedsRsY-hZe2-a6YsebuHc3ptPo4";
 
+/**  Yep, only one action here!  **/
 var LogStoreActions = Reflux.createActions( ['log'] );
 
 var LogStore = Reflux.createStore({
@@ -19,38 +17,30 @@ var LogStore = Reflux.createStore({
 	listenables: [LogStoreActions],
 
   init: function() {
-    //set up firebase test user data
-		var firebase_base = new Firebase(FIREBASE_URL+"/"+this._pid+"/");
 
-		//authenticate firebase
-		firebase_base.auth(FIREBASE_AUTH_TOKEN, function(error, result) {
-		  if (error) {
-		    console.log("Authentication Failed!", error);
-		  } else {
-		    console.log("Authenticated successfully with payload:", result.auth);
-		    console.log("Auth expires at:", new Date(result.expires * 1000));
-		  }
-		});
+		/**   Here's the Firebase Credentials - Edit them here if using a
+		 *     different account or if you get a new key... etc.         **/
+		this._DatabaseName = "macaron-mix-ii-7868f";
+		this._ProjectID = "macaron-mix-ii-7868f";
+		this._APIKey = "AIzaSyCVdXzvIQWrYXp4JX_Zs9lmELybDTI0aw4";
 
-    this._firebase_block = firebase_base.push();
-		this._firebase_block.set(
-			{
-				animation:this._animation,
-				startTime:Date.now(),
-				"interface":interfaceText
-			});
+		// Initialize Firebase
+		var config = {
+		  apiKey: this._APIKey,
+		  authDomain: this._ProjectID + ".firebaseapp.com",
+		  databaseURL: "https://" + This._DatabaseName + ".firebaseio.com",
+		  storageBucket: "<BUCKET>.appspot.com",
+		};
 
-		//setup firebase log data
-		var block_key = this._firebase_block.key();
-		this._firebase_log = new Firebase(FIREBASE_URL+"/"+this._pid+"/"+block_key+"/log/");
+		firebase.initializeApp(config);
 
 
+		this._db = firebase.database();
   },
 
 
-  log: function() {
-		this._firebase_log.push({t:Date.now(), value:txt});
-    // TODO Add to what's being logged!
+  log: function(button, currentMix, currentIconNumber) {
+		this._db.ref
   }
 
 });
