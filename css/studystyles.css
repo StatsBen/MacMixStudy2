@@ -131,6 +131,10 @@ background: #777777;
   background: #FDFFCC;
 }
 
+.control-button:active {
+  background: orange;
+}
+
 .control-button-text {
   display: block;
   position: relative;

@@ -19,7 +19,9 @@ var StudyInterface = React.createClass({
   render: function() {
     return(
       <div id="app">
-      <p>write a whole bunch of instructions here...</p>
+      <p>Double Click on either your icon or the target icon to play it.</p>
+      <p>Then click on either the equal or not-equal buttons according to whether or not you think your icon is the same as the target icon.</p>
+      <p>When a button is not able to be clicked, it will go dark and gray.</p>
         <StaircaseTask />
       </div>
     );

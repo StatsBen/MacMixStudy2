@@ -11,6 +11,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Reflux from 'reflux';
 
+var LogStore = require('./log-store.js');
+
 var StaircaseTaskActions = Reflux.createActions([
   'previewTargetIcon',
   'previewYourIcon',
@@ -36,7 +38,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._currentStaircaseTask = [];
     this._currentIconNumber = 1;  // counts up to 20
     this._currentStairPhase = 1;  // counts up to 5
-    this._totalNIcons = 2; // TODO Change this to the actual number after testing!
+    this._totalNIcons = 30; // TODO Change this to the actual number after testing!
     this._nSteps = 3;      // TODO Change this after piloting!
     this._approachingTarget = true;
     this._currentMix = 0;         // decrements and increments as they click
@@ -54,10 +56,39 @@ var StaircaseTaskStore = Reflux.createStore({
     this._studyRecord.push("begin study");
     this._studyRecord.push(this._globalTStart);
     this._iconPairings = [{target:1, yours:2},
+                          {target:1, yours:3},
+                          {target:1, yours:4},
+                          {target:1, yours:5},
+                          {target:1, yours:6},
                           {target:2, yours:1},
+                          {target:2, yours:3},
+                          {target:2, yours:4},
+                          {target:2, yours:5},
+                          {target:2, yours:6},
+                          {target:3, yours:1},
+                          {target:3, yours:2},
+                          {target:3, yours:4},
+                          {target:3, yours:5},
+                          {target:3, yours:6},
+                          {target:4, yours:1},
+                          {target:4, yours:2},
+                          {target:4, yours:3},
+                          {target:4, yours:5},
+                          {target:4, yours:6},
+                          {target:5, yours:1},
+                          {target:5, yours:2},
+                          {target:5, yours:3},
+                          {target:5, yours:4},
+                          {target:5, yours:6},
+                          {target:6, yours:1},
+                          {target:6, yours:2},
+                          {target:6, yours:3},
+                          {target:6, yours:4},
+                          {target:6, yours:5},
                         ]
 
     console.log(this._studyRecord);
+    LogStore.actions.log();
   },
 
   /**
@@ -151,6 +182,7 @@ var StaircaseTaskStore = Reflux.createStore({
    *   playing the icon hi-fi with the web-audio api using and a buffer!
    **/
   playYours: function() {
+
     // Stop the other icon if it's playing...
     if (this._currentlyPlaying == "target"); {
       document.getElementById("target-icon").className = "icon not-playing";
@@ -318,7 +350,8 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   _getCurrentTargetAmplitude: function(t) {
-    var ampData = waveData[this._currentIconNumber - 1];
+    var i = this._iconPairings[this._currentIconNumber].target - 1;
+    var ampData = waveData[i];
     var amp = 0.1; // default
     for (var j=0; j<ampData.length; j++) {
 
