@@ -37,6 +37,7 @@ var LogStore = Reflux.createStore({
 		};
 
 		firebase.initializeApp(config, "macmix");
+		//this._db = 
   },
 
 
