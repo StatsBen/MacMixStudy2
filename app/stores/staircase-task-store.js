@@ -222,8 +222,8 @@ var StaircaseTaskStore = Reflux.createStore({
     var nDTWSamples = 40;
     var iconInd1 = this._iconPairings[this._currentIconNumber - 1].yours;
     var iconInd2 = this._iconPairings[this._currentIconNumber - 1].target;
-    var wave1Amps = waveData[iconInd1];
-    var wave2Amps = waveData[iconInd2];
+    var wave1Amps = waveData[iconInd1 - 1];
+    var wave2Amps = waveData[iconInd2 - 1];
     var duration1 = 3000; var duration2 = 3000;
     var partitionedAmps1 = new Array(nDTWSamples);
     var partitionedAmps2 = new Array(nDTWSamples);
@@ -235,13 +235,16 @@ var StaircaseTaskStore = Reflux.createStore({
     var t1 = 0;  var t2 = 0;
     var j1 = 0;  var j2 = 0;
 
+    console.log('mixing icons: ' + iconInd1 + ' and ' + iconInd2);
+    console.log(wave1Amps);
+    console.log(wave2Amps);
+
     /** Partitioning the waveform amplitude **/
     while(t1 <= duration1) {
       if (wave1Amps[i1]) {
         //console.log('case1: ');
-        while (t1 >= wave1Amps[i1].t && wave1Amps[i1+1]) { i1++; console.log(i1); }
-        if (t1 >= wave1Amps[i1].t && (i1+1) == wave1Amps.length) {
-          console.log('innerthing'); i1++; }
+        while (t1 >= wave1Amps[i1].t && wave1Amps[i1+1]) { i1++; }
+        if (t1 >= wave1Amps[i1].t && (i1+1) == wave1Amps.length) { i1++; }
       }
 
       if (!wave1Amps[i1]) {
@@ -268,10 +271,8 @@ var StaircaseTaskStore = Reflux.createStore({
         partitionedAmps1[j1] = +sampledValue.toFixed(3);
       }
 
-      t1 += partitionWidth; j1++; console.log(t1);
+      t1 += partitionWidth; j1++;
     }
-
-    console.log('and the sister loop?');
 
     while (t2 <= duration2) {
       if (wave2Amps[i2]) {
@@ -422,8 +423,8 @@ var StaircaseTaskStore = Reflux.createStore({
     console.log('output nodes: ');
     console.log(outputNodes);
     var finalNodes = [];
-    var wave1value = this._currentMix;
-    var wave2value = 100 - wave1value;
+    var wave2value = this._currentMix;
+    var wave1value = 100 - wave2value;
     for (var k=0; k<nNodes; k++) {
       var i = costNodes[k].i;
       var j = costNodes[k].j;
