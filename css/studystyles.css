@@ -13,6 +13,9 @@ html {
 body {
   font-size: 12px;
   font-family:"Helvetica Nueue", sans-serif;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 
 h1 {
@@ -21,6 +24,9 @@ h1 {
   color: #000000;
   font-size: 36pt;
   font-weight: 900;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 
 h2 {
@@ -30,6 +36,9 @@ h2 {
 p {
   font-size: 12pt;
   font-weight: 100;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 
 
@@ -59,10 +68,24 @@ p {
 
 .playing {
   background: orange;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  pointer-events: none;
 }
 
 .playing:hover {
   background: orange;
+}
+
+.no-clicking {
+  pointer-events: none;
+  color: #555555;
+  background: #777777;
+}
+
+.no-clicking:hover {
+background: #777777;
 }
 
 .icon-label {
@@ -118,6 +141,12 @@ p {
 
 .unavailable {
   color: #555555;
+  background: #777777;
+}
+
+.unavailable:hover {
+  background: #777777;
+  box-shadow: -3px 3px 5px #888888;
 }
 
 
