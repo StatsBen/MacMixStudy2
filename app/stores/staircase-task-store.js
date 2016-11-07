@@ -34,27 +34,25 @@ var StaircaseTaskStore = Reflux.createStore({
    *     the course of the study.
    **/
   init: function() {
-    this._studyRecord = [];
-    this._currentStaircaseTask = [];
+    //this._studyRecord = [];
+    //this._currentStaircaseTask = [];
     this._currentIconNumber = 1;  // counts up to 20
     this._currentStairPhase = 1;  // counts up to 5
     this._totalNIcons = 30; // TODO Change this to the actual number after testing!
-    this._nSteps = 3;      // TODO Change this after piloting!
+    this._nSteps = 3;       // TODO Change this after piloting!
     this._approachingTarget = true;
     this._currentMix = 0;         // decrements and increments as they click
                                   //  equal and not-equal
 
-    this._globalTStart = new Date().getTime()/(1000*60); //minutes since epoch
-    this._currentTStart = new Date().getTime()/(1000*60);
-    this._totalClicks = 0;        // number of clicks used in the study...
+    //this._globalTStart = new Date().getTime()/(1000*60); //minutes since epoch
+    //this._currentTStart = new Date().getTime()/(1000*60);
+    //this._totalClicks = 0;        // number of clicks used in the study...
 
     this._currentlyPlaying = "none";
-    this._autoplayStatus = "on";
+    //this._autoplayStatus = "on";
 
-    this._canSubmit = false;
-
-    this._studyRecord.push("begin study");
-    this._studyRecord.push(this._globalTStart);
+    //this._studyRecord.push("begin study");
+    //this._studyRecord.push(this._globalTStart);
     this._iconPairings = [{target:1, yours:2},
                           {target:1, yours:3},
                           {target:1, yours:4},
@@ -88,7 +86,7 @@ var StaircaseTaskStore = Reflux.createStore({
                         ]
 
     console.log(this._studyRecord);
-    LogStore.actions.log();
+    LogStore.actions.log("begin", this._currentMix, "p", this._currentIconNumber);
   },
 
   /**
@@ -194,9 +192,6 @@ var StaircaseTaskStore = Reflux.createStore({
     this._currentlyPlaying = "yours";
     document.getElementById("your-icon").className = "icon playing";
     document.getElementById("target-icon").className = "icon no-clicking";
-
-
-    this._currentStaircaseTask.push("previewed their icon");
 
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
@@ -535,30 +530,47 @@ var StaircaseTaskStore = Reflux.createStore({
   _moveTowardsTarget: function() {
     var stepSize = Math.round(10/this._currentStairPhase);
     this._currentMix += stepSize;
-    this._currentStaircaseTask.push(this._currentMix);
+    //this._currentStaircaseTask.push(this._currentMix);
     console.log("made a step in the right direction!  " + this._currentMix);
   },
 
   _moveAwayFromTarget: function() {
     var stepSize = Math.round(10/this._currentStairPhase);
     this._currentMix -= stepSize;
-    this._currentStaircaseTask.push(this._currentMix);
+    //this._currentStaircaseTask.push(this._currentMix);
     console.log("Moved away from target...  " + this._currentMix);
   },
 
   _changeDirection: function() {
-    this._approachingTarget = !this._approachingTarget;
     this._currentStairPhase++;
+    var noMoreIcons = this._currentIconNumber == this._totalNIcons
     var hasEnoughSteps = this._currentStairPhase == this._nSteps;
-    if (hasEnoughSteps) {
-      this._canSubmit = true;
-      this._openForSubmission();
-      if (this._isEven(this._nSteps))
-        this._disableNotEqualButton();
-      else
-        this._disableEqualButton();
+    console.log(this._currentStairPhase);
+    console.log(this._currentIconNumber);
+
+      // TODO: Log the last action...
+
+    // Case 1: The study is over!
+    if (noMoreIcons && hasEnoughSteps) {
+      alert('the study is complete! Thank you for participating :)');
+      this._currentMix = 0;
     }
-    this._currentStaircaseTask.push(this._currentMix);
+
+    // Case 2: we've stairstepped to the end! Woo!
+    else if (hasEnoughSteps) {
+      // Log it! TODO
+      this._currentMix = 0;
+      this._approachingTarget = true;
+      this._currentIconNumber++;
+      this._currentlyPlaying = "none";
+      alert('task complete! Moving on to the next task now.');
+    }
+
+    // Case 3: Continue stairstepping :)
+    else {
+      this._approachingTarget = !this._approachingTarget;
+    }
+    //this._currentStaircaseTask.push(this._currentMix);  // not how we log anymore :/
     console.log("changed direction at: " + this._currentMix);
   },
 

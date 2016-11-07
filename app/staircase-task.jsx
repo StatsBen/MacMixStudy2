@@ -20,7 +20,7 @@ var StaircaseTask = React.createClass({
     return(
       <div id="staircase-task">
         <h2 id="staircase-task-header">Matching Task</h2>
-        <AutoPlayButton />
+        
         <div id="icon-player-container">
           <TargetIcon />
           <div id="controls-container">

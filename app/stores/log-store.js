@@ -37,12 +37,12 @@ var LogStore = Reflux.createStore({
 		};
 
 		firebase.initializeApp(config, "macmix");
-		//this._db = 
+		//this._db =
   },
 
 
-  log: function() {
-		console.log('logged');
+  log: function(button, mix, participant, iconNumber) {
+		console.log('logged: ' + button + mix.toString() + participant + iconNumber, Date.now());
   }
 
 });
