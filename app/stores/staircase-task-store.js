@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import Reflux from 'reflux';
 
 var LogStore = require('./log-store.js');
+var AudioHelper = require('./../util/audiohelper.js');
 
 var StaircaseTaskActions = Reflux.createActions([
   'previewTargetIcon',
@@ -126,7 +127,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var phaseIntegral = 0;
 		var dt_in_s = 1.0/sampleRate;
 
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
 		var source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
@@ -209,7 +210,8 @@ var StaircaseTaskStore = Reflux.createStore({
 		var phaseIntegral = 0;
 		var dt_in_s = 1.0/sampleRate;
 
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    console.log(AudioHelper);
+		var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
 		var source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
