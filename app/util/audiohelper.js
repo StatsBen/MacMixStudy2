@@ -10,11 +10,8 @@ var AudioContextSingleton = (function () {
  
     return {
         getInstance: function () {
-            console.log('Instance requested.');
             if (!audioContextSingleton) {
-                console.log('Creating singleton...');
                 audioContextSingleton = createInstance();
-                console.log('...done.');
             }
             return audioContextSingleton;
         }

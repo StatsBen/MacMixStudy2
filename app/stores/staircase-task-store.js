@@ -210,8 +210,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var phaseIntegral = 0;
 		var dt_in_s = 1.0/sampleRate;
 
-    console.log(AudioHelper);
-		var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
+    var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
 		var source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
