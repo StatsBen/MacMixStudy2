@@ -20,8 +20,6 @@ var ICON_TARGET = 0;
 var ICON_MIX = 1;
 
 var StaircaseTaskActions = Reflux.createActions([
-  'previewTargetIcon',
-  'previewYourIcon',
   'clickEqual',
   'clickNotEqual',
   'playPositionID'
