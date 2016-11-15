@@ -9,28 +9,35 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
-var YourIcon = React.createClass({
+var PlayButton = React.createClass({
+
+  
+  propTypes: {
+    positionID : React.PropTypes.number.isRequired
+      },
 
   /**
    *  Function exported to the staircase task store :/
    *   Then this function just makes it visually obvious that it's playing.
    **/
   _play: function() {
-    StaircaseTaskStore.actions.playYours();
+    StaircaseTaskStore.actions.play(this.props.positionID);
     // TODO: Highlight the thing....
   },
 
+
+
   render: function() {
     return(
-      <div id="your-icon"
-           className="icon not-playing"
-           ref="yourIcon"
+      <div id={"playbutton-"+this.props.positionID}
+           className="playbutton not-playing"
+           ref={"ref-playbutton-"+this.props.positionID}
            onDoubleClick={this._play}>
-        <p id="your-icon-label" className="icon-label">Your Icon</p>
-        <p id="your-icon-instructions" className="icon-instructions">
+        <p id={"playbutton-"+this.props.positionID+"-label"} className="playbutton-label">{this.props.positionID}</p>
+        <p id={"playbutton-"+this.props.positionID+"instructions"} className="playbutton-instructions">
           Double Click to Preview
         </p>
-        <audio id="your-audio">
+        <audio id={"audio-"+this.props.positionID}>
           <source src="./../icons/icon2.wav" type="audio/wav" />
         </audio>
       </div>
@@ -39,4 +46,4 @@ var YourIcon = React.createClass({
 
 });
 
-module.exports = YourIcon;
+module.exports = PlayButton;

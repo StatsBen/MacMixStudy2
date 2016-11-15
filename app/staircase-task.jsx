@@ -7,8 +7,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-var TargetIcon = require('./target-icon.jsx');
-var YourIcon = require('./your-icon.jsx');
+var PlayButton = require('./playbutton.jsx');
 var EqualButton = require('./equal-button.jsx');
 var NotEqualButton = require('./not-equal-button.jsx');
 var StaircaseTaskStore = require('./stores/staircase-task-store.js');
@@ -20,13 +19,13 @@ var StaircaseTask = React.createClass({
       <div id="staircase-task">
         <h2 id="staircase-task-header">Matching Task</h2>
         
-        <div id="icon-player-container">
-          <TargetIcon />
+        <div id="playbutton-player-container">
+          <PlayButton positionID={1} />
           <div id="controls-container">
             <EqualButton />
             <NotEqualButton />
           </div>
-          <YourIcon />
+          <PlayButton positionID={2} />
         </div>
       </div>
     );
