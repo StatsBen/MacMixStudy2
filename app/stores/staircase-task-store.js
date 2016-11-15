@@ -6,6 +6,7 @@
  *     throughout the app!
  *
  *  Author: Ben Clark - Oct. 2016
+ *  Contributions by Oliver Schneider, Nov. 15, 2016
  **/
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -155,7 +156,7 @@ var StaircaseTaskStore = Reflux.createStore({
 
     //now, set the now-playing position to play
     this._currentlyPlayingPositionID = positionID;
-    document.getElementById("playbutton-"+positionID).className = "icon playing";
+    document.getElementById("playbutton-"+positionID).className = "playbutton playing";
 
     if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_TARGET)
     {
