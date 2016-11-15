@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import Reflux from 'reflux';
 
 var LogStore = require('./log-store.js');
+var AudioHelper = require('./../util/audiohelper.js');
 
 var StaircaseTaskActions = Reflux.createActions([
   'previewTargetIcon',
@@ -89,6 +90,13 @@ var StaircaseTaskStore = Reflux.createStore({
     LogStore.actions.log("begin", this._currentMix, "p", this._currentIconNumber);
   },
 
+  _bufferOnEnded: function(e) {
+      console.log("buffer onEnded");
+      document.getElementById("target-icon").className = "icon not-playing";
+      document.getElementById("your-icon").className = "icon not-playing";
+      this._currentlyPlaying = "none";
+  },
+
   /**
    *  "Play Target" will handle the playing of the target icon by:
    *    - stop playing whatever else might be playing
@@ -126,7 +134,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var phaseIntegral = 0;
 		var dt_in_s = 1.0/sampleRate;
 
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
 		var source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
@@ -161,11 +169,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		source.buffer = myAudioBuffer;
 		source.connect(audioCtx.destination);
     source.id = "target-source";
-    source.onended = function() {
-      document.getElementById("target-icon").className = "icon not-playing";
-      document.getElementById("your-icon").className = "icon not-playing";
-      this._currentlyPlaying = "none";
-    }
+    source.onended = this._bufferOnEnded;
     source.start();
   },
 
@@ -209,7 +213,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var phaseIntegral = 0;
 		var dt_in_s = 1.0/sampleRate;
 
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
 		var source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
@@ -467,11 +471,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		source.buffer = myAudioBuffer;
 		source.connect(audioCtx.destination);
     source.id = "your-source";
-    source.onended = function() {
-      document.getElementById("target-icon").className = "icon not-playing";
-      document.getElementById("your-icon").className = "icon not-playing";
-      this._currentlyPlaying = "none";
-    }
+    source.onended = this._bufferOnEnded;
     source.start();
   },
 
