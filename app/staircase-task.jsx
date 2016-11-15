@@ -7,7 +7,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-var AutoPlayButton = require('./auto-play-button.jsx');
 var TargetIcon = require('./target-icon.jsx');
 var YourIcon = require('./your-icon.jsx');
 var EqualButton = require('./equal-button.jsx');
