@@ -27,6 +27,10 @@ var StaircaseTask = React.createClass({
             <PlayButton positionID={2} />
             <SelectButton positionID={2} />
           </div>
+          <div className="button-container">
+            <PlayButton positionID={3} />
+            <SelectButton positionID={3} />
+          </div>
         </div>
       </div>
     );
