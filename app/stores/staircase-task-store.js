@@ -83,10 +83,42 @@ var StaircaseTaskStore = Reflux.createStore({
                           {target:6, yours:3},
                           {target:6, yours:4},
                           {target:6, yours:5},
-                        ]
+                        ];
+
+    //this function is idempotent, and used for initialization of the position ID -> Icon Map
+    this._assignRandomPositionIDIconMap();
 
     console.log(this._studyRecord);
     LogStore.actions.log("begin", this._currentMix, "p", this._currentIconNumber);
+  },
+
+  _fisher_yates_shuffle: function (array) {
+    //from https://www.frankmitchell.org/2015/01/fisher-yates/
+    //also widely available elsewhere, e.g., Knuth
+  var i = 0;
+  var j = 0;
+  var temp = null;
+
+  for (i = array.length - 1; i > 0; i -= 1) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+
+},
+
+  _assignRandomPositionIDIconMap: function() {
+
+    //create a randomized list of position IDs
+    var positionIDs = [1,2,3];
+    this._fisher_yates_shuffle(positionIDs);
+
+    //map each randomized position ID to an Icon, two to the current target and one to the current mix
+    this._PositionID_Icon_Map = {};
+    this._PositionID_Icon_Map[positionIDs[0]] = this._iconPairings[this._currentIconNumber-1].target;
+    this._PositionID_Icon_Map[positionIDs[1]] = this._iconPairings[this._currentIconNumber-1].target;
+    this._PositionID_Icon_Map[positionIDs[2]] = this._iconPairings[this._currentIconNumber-1].yours;
   },
 
   _bufferOnEnded: function(e) {
