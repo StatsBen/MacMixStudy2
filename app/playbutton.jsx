@@ -1,9 +1,9 @@
 /**
  *  This React component will be a large button that allows a user
- *   to see and preview their  icon that they will be matching to the
- *    target icon.
+ *   to see and preview an icon
  *
- *  Author: Ben Clark - Oct. 2016
+ *  Author: Oliver Schneider, Nov. 15 2016
+ *  Based on previous "your-icon" code by Ben Clark - Oct. 2016
  **/
 import React from 'react';
 import ReactDOM from 'react-dom';
