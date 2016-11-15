@@ -138,8 +138,7 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   _bufferOnEnded: function(e) {
-      console.log("buffer onEnded");
-      this._resetPlayButtons()
+      this._resetPlayButtons();
       this._currentlyPlayingPositionID = null;
   },
 
