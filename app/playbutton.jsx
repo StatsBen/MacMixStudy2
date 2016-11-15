@@ -21,7 +21,7 @@ var PlayButton = React.createClass({
    *   Then this function just makes it visually obvious that it's playing.
    **/
   _play: function() {
-    StaircaseTaskStore.actions.play(this.props.positionID);
+    StaircaseTaskStore.actions.playPositionID(this.props.positionID);
     // TODO: Highlight the thing....
   },
 

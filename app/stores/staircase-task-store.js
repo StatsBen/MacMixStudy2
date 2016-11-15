@@ -14,13 +14,16 @@ import Reflux from 'reflux';
 var LogStore = require('./log-store.js');
 var AudioHelper = require('./../util/audiohelper.js');
 
+
+var ICON_TARGET = 0;
+var ICON_MIX = 1;
+
 var StaircaseTaskActions = Reflux.createActions([
   'previewTargetIcon',
   'previewYourIcon',
   'clickEqual',
   'clickNotEqual',
-  'playTarget',
-  'playYours'
+  'playPositionID'
 ]);
 
 var StaircaseTaskStore = Reflux.createStore({
@@ -48,7 +51,7 @@ var StaircaseTaskStore = Reflux.createStore({
     //this._currentTStart = new Date().getTime()/(1000*60);
     //this._totalClicks = 0;        // number of clicks used in the study...
 
-    this._currentlyPlaying = "none";
+    this._currentlyPlayingPositionID = null;
     //this._autoplayStatus = "on";
 
     //this._studyRecord.push("begin study");
@@ -116,16 +119,54 @@ var StaircaseTaskStore = Reflux.createStore({
 
     //map each randomized position ID to an Icon, two to the current target and one to the current mix
     this._PositionID_Icon_Map = {};
-    this._PositionID_Icon_Map[positionIDs[0]] = this._iconPairings[this._currentIconNumber-1].target;
-    this._PositionID_Icon_Map[positionIDs[1]] = this._iconPairings[this._currentIconNumber-1].target;
-    this._PositionID_Icon_Map[positionIDs[2]] = this._iconPairings[this._currentIconNumber-1].yours;
+    this._PositionID_Icon_Map[positionIDs[0]] = ICON_TARGET;
+    this._PositionID_Icon_Map[positionIDs[1]] = ICON_TARGET;
+    this._PositionID_Icon_Map[positionIDs[2]] = ICON_MIX;
+  },
+
+  _resetPlayButtons: function() {
+    for (var i = 1; i <= 3; i++) {
+      document.getElementById("playbutton-"+i).className = "playbutton not-playing";
+      // Stop the other icons if one of them is playing
+      //TODO: figure this out
+      // if (document.getElementById("audio-"+i))
+      // {
+      //   document.getElementById("audio-"+i).stop();
+      // }
+    }
   },
 
   _bufferOnEnded: function(e) {
       console.log("buffer onEnded");
-      document.getElementById("target-icon").className = "icon not-playing";
-      document.getElementById("your-icon").className = "icon not-playing";
-      this._currentlyPlaying = "none";
+      this._resetPlayButtons()
+      this._currentlyPlayingPositionID = null;
+  },
+
+  /**
+  * Given a positionID, probably from a PlayButton, plays the corresponding sound
+  **/
+  playPositionID:function(positionID) {
+
+    //there are three positions right now (THIS IS HARDCODED; TODO: GENERALIZE)
+    //go through all buttons and reset them
+    for (var i = 1; i <= 3; i++) {
+      document.getElementById("playbutton-"+i).className = "playbutton not-playing no-clicking";
+    }
+
+    //now, set the now-playing position to play
+    this._currentlyPlayingPositionID = positionID;
+    document.getElementById("playbutton-"+positionID).className = "icon playing";
+
+    if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_TARGET)
+    {
+      this.playTarget();
+    } else if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_MIX) {
+      this.playYours();
+    } else {
+      console.log("ERROR: Requesting unknown method of playing: " + this._PositionID_Icon_Map[this._currentlyPlayingPositionID]);
+    }
+
+
   },
 
   /**
@@ -136,19 +177,7 @@ var StaircaseTaskStore = Reflux.createStore({
    *    - reset that all when it's done!
    **/
   playTarget: function() {
-    // Stop the other icon if it's playing...
-    if (this._currentlyPlaying == "your"); {
-      document.getElementById("your-icon").className = "icon not-playing";
-      if (document.getElementById("your-source"))
-        document.getElementById("your-source").stop();
-      this._currentlyPlaying = "none";
-    }
-
-    this._currentlyPlaying = "target";
-    document.getElementById("target-icon").className = "icon playing";
-    document.getElementById("your-icon").className = "icon no-clicking";
-
-
+    
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
 		var channels = 1; // Standard mono-audio
@@ -215,18 +244,6 @@ var StaircaseTaskStore = Reflux.createStore({
    *   playing the icon hi-fi with the web-audio api using and a buffer!
    **/
   playYours: function() {
-
-    // Stop the other icon if it's playing...
-    if (this._currentlyPlaying == "target"); {
-      document.getElementById("target-icon").className = "icon not-playing";
-      if (document.getElementById("target-source"))
-        document.getElementById("target-source").stop();
-      this._currentlyPlaying = "none";
-    }
-
-    this._currentlyPlaying = "yours";
-    document.getElementById("your-icon").className = "icon playing";
-    document.getElementById("target-icon").className = "icon no-clicking";
 
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
@@ -593,7 +610,7 @@ var StaircaseTaskStore = Reflux.createStore({
       this._currentMix = 0;
       this._approachingTarget = true;
       this._currentIconNumber++;
-      this._currentlyPlaying = "none";
+      this._currentlyPlayingPositionID = "none";
       alert('task complete! Moving on to the next task now.');
     }
 
