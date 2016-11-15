@@ -196,7 +196,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var dt_in_s = 1.0/sampleRate;
 
 		var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
-		var source = audioCtx.createBufferSource();
+		this._source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
 
@@ -227,11 +227,11 @@ var StaircaseTaskStore = Reflux.createStore({
 			buffer[(i*sampleSize)] = v; /*needs to be in range  -1 to 1 to work for AudioBufferSourceNode*/
 		}
 
-		source.buffer = myAudioBuffer;
-		source.connect(audioCtx.destination);
-    source.id = "target-source";
-    source.onended = this._bufferOnEnded;
-    source.start();
+		this._source.buffer = myAudioBuffer;
+		this._source.connect(audioCtx.destination);
+    this._source.id = "target-source";
+    this._source.onended = this._bufferOnEnded;
+    this._source.start();
   },
 
   /**
@@ -263,7 +263,7 @@ var StaircaseTaskStore = Reflux.createStore({
 		var dt_in_s = 1.0/sampleRate;
 
     var audioCtx = AudioHelper.AudioContextSingleton.getInstance();
-		var source = audioCtx.createBufferSource();
+		this._source = audioCtx.createBufferSource();
 		var myAudioBuffer = audioCtx.createBuffer(channels, totalSize, sampleRate);
 		var buffer = myAudioBuffer.getChannelData(0);
 
@@ -517,11 +517,11 @@ var StaircaseTaskStore = Reflux.createStore({
 			buffer[(i*sampleSize)] = v; /*needs to be in range  -1 to 1 to work for AudioBufferSourceNode*/
 		}
 
-		source.buffer = myAudioBuffer;
-		source.connect(audioCtx.destination);
-    source.id = "your-source";
-    source.onended = this._bufferOnEnded;
-    source.start();
+		this._source.buffer = myAudioBuffer;
+		this._source.connect(audioCtx.destination);
+    this._source.id = "your-source";
+    this._source.onended = this._bufferOnEnded;
+    this._source.start();
   },
 
   /**
