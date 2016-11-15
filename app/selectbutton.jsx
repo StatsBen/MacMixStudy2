@@ -16,7 +16,7 @@ var SelectButton = React.createClass({
       },
 
   _handleClick: function() {
-    StaircaseTaskStore.actions.selectPosition(this.props.positionID);
+    StaircaseTaskStore.actions.selectPositionID(this.props.positionID);
   },
 
   render: function() {

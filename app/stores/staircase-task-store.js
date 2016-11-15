@@ -20,8 +20,7 @@ var ICON_TARGET = 0;
 var ICON_MIX = 1;
 
 var StaircaseTaskActions = Reflux.createActions([
-  'clickEqual',
-  'clickNotEqual',
+  'selectPositionID',
   'playPositionID'
 ]);
 
@@ -519,6 +518,20 @@ var StaircaseTaskStore = Reflux.createStore({
     this._source.id = "your-source";
     this._source.onended = this._bufferOnEnded;
     this._source.start();
+  },
+
+
+  selectPositionID: function(positionID) {
+    if (this._PositionID_Icon_Map[positionID] == ICON_TARGET)
+    {
+      this.clickNotEqual();
+    } else if (this._PositionID_Icon_Map[positionID] == ICON_MIX) {
+      this.clickEqual();
+    } else {
+      console.log("ERROR: Requesting unknown method of selecting: " + this._PositionID_Icon_Map[positionID]);
+    }
+
+    this._assignRandomPositionIDIconMap();
   },
 
   /**
