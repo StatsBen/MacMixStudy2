@@ -19,7 +19,6 @@ var StaircaseTaskActions = Reflux.createActions([
   'previewYourIcon',
   'clickEqual',
   'clickNotEqual',
-  'clickSubmit',
   'playTarget',
   'playYours'
 ]);
