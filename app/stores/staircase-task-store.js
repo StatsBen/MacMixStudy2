@@ -158,7 +158,7 @@ var StaircaseTaskStore = Reflux.createStore({
     {
       this.playTarget();
     } else if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_MIX) {
-      this.playYours();
+      this.playMix();
     } else {
       console.log("ERROR: Requesting unknown method of playing: " + this._PositionID_Icon_Map[this._currentlyPlayingPositionID]);
     }
@@ -240,7 +240,7 @@ var StaircaseTaskStore = Reflux.createStore({
    *  Major credit to Oliver Schneider (UBC) for devising the way of
    *   playing the icon hi-fi with the web-audio api using and a buffer!
    **/
-  playYours: function() {
+  playMix: function() {
 
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
