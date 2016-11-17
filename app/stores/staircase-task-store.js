@@ -19,6 +19,19 @@ var AudioHelper = require('./../util/audiohelper.js');
 var ICON_TARGET = 0;
 var ICON_MIX = 1;
 
+var PossibleDirections = {
+    TOWARDS_TARGET:0,
+    STAY_PUT:1,
+    AWAY_FROM_TARGET:2
+};
+
+var UpdateRules = {
+  ONEUP_ONEDOWN: 0,
+  ONEUP_TWODOWN: 1
+};
+
+var NUMBER_OF_REVERSALS = 12;
+
 var StaircaseTaskActions = Reflux.createActions([
   'selectPositionID',
   'playPositionID'
@@ -39,9 +52,7 @@ var StaircaseTaskStore = Reflux.createStore({
     //this._currentStaircaseTask = [];
     this._currentIconNumber = 1;  // counts up to 20
     this._currentStairPhase = 1;  // counts up to 5
-    this._totalNIcons = 30; // TODO Change this to the actual number after testing!
-    this._nSteps = 3;       // TODO Change this after piloting!
-    this._approachingTarget = true;
+    this._reversalCount = 0;
     this._currentMix = 0;         // decrements and increments as they click
                                   //  equal and not-equal
 
@@ -51,6 +62,12 @@ var StaircaseTaskStore = Reflux.createStore({
 
     this._currentlyPlayingPositionID = null;
     //this._autoplayStatus = "on";
+
+    //update rules initiation
+    this._previousAnswers = [];
+    this._currentDirection = PossibleDirections.TOWARDS_TARGET;
+    //TODO: Make this dependent on user input
+    this._updaterule = UpdateRules.ONEUP_ONEDOWN;
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
@@ -522,63 +539,124 @@ var StaircaseTaskStore = Reflux.createStore({
 
 
   selectPositionID: function(positionID) {
+
+    var correctAnswer = null;
+
     if (this._PositionID_Icon_Map[positionID] == ICON_TARGET)
     {
-      this.clickNotEqual();
+      correctAnswer = false;
     } else if (this._PositionID_Icon_Map[positionID] == ICON_MIX) {
-      this.clickEqual();
+      correctAnswer = true;
     } else {
       console.log("ERROR: Requesting unknown method of selecting: " + this._PositionID_Icon_Map[positionID]);
     }
 
+    if (correctAnswer != null) {
+      this.doneTrial(correctAnswer);
+    }
+
+  },
+
+
+  doneTrial: function(correctAnswer) {
+    //TODO: Move this to firebase
+    console.log("doneTrial");
+
+    this.nextTrial(correctAnswer);
+  },
+
+  nextTrial: function(correctAnswer) {
+
+    if (this.isBlockDone())
+    {
+      this.doneBlock();
+      if (!this.isNextBlock())
+      {
+        alert("Thank you for participating in the study!");
+      }
+    }
+
+    this.updateMixValues(correctAnswer);
     this._assignRandomPositionIDIconMap();
   },
 
-  /**
-   *  "Click Equal" handles what should happen when the "equal"
-   *   button is clicked by:
-   *     - incrementing/decrementing the current mix,
-   *     - recording the action in the current task,
-   *     - updating the icon that will be played next,
-   *     - updating the status of the "submit" button,
-   *     - initiating autoplay if it's turned on!
-   **/
-  clickEqual: function() {
 
-    // Case 1: We're approaching the target icon
-    if (this._approachingTarget) {
-      this._moveTowardsTarget();
-    }
-    // Case 2: We're moving away from the target
-    else {
-      this._changeDirection();
-      this._moveAwayFromTarget();
-    }
+
+  doneBlock: function() {
+      // Log it! TODO
+      this._currentMix = 0;
+      this._approachingTarget = true;
+      this._currentIconNumber++;
+      this._currentlyPlayingPositionID = null;
+      this._previousAnswers = [];
+      this._currentDirection = PossibleDirections.TOWARDS_TARGET;
+      alert('task complete! Moving on to the next task now.');
   },
 
-  /**
-   *  "Click Not-Equal" handles the event that the "not-equal" button is
-   *   clicked by:
-   *     - incrementing/decrementing the current mix,
-   *     - recording the action in the current task,
-   *     - reversing the direction of staitcasing,
-   *     - updating the icon that will be played next,
-   *     - updating the status of the "submit" button,
-   *     - initiating autoplay if it's turned on!
-   **/
-  clickNotEqual: function() {
-    // Case 1: We're approaching the target icon
-    if (this._approachingTarget) {
-      this._changeDirection();
-      this._moveTowardsTarget();
-    }
-    // Case 2: We're headed away from the target icon
-    else {
-      this._moveAwayFromTarget();
-    }
+  isBlockDone: function() {
+    return (this._reversalCount >= NUMBER_OF_REVERSALS);
   },
 
+  isNextBlock: function() {
+    return (this._currentIconNumber >= this._iconPairings.length);
+  },
 
+  doneStudy: function() {
+    alert('the study is complete! Thank you for participating :)');
+    this._currentMix = 0;
+  },
+
+  decideDirection: function(correctAnswer) {
+    this._previousAnswers.push(correctAnswer);
+    var listLength = this._previousAnswers.length;
+
+    var rv = PossibleDirections.STAY_PUT;
+
+    if (this._updaterule == UpdateRules.ONEUP_ONEDOWN)
+    {
+      if (this._previousAnswers[listLength-1])
+      {
+        rv = PossibleDirections.TOWARDS_TARGET;
+      } else {
+        rv = PossibleDirections.AWAY_FROM_TARGET;
+      }
+
+    } else if (this._updaterule == UpdateRules.ONEUP_TWODOWN)
+    {
+      if (this._previousAnswers.length > 1) {
+        if(this._previousAnswers[listLength-1] && this._previousAnswers[listLength-2])
+        {
+          rv = PossibleDirections.TOWARDS_TARGET;
+        } else if (!this._previousAnswers[listLength-1]) {
+          rv = PossibleDirections.AWAY_FROM_TARGET;
+        }
+      }
+    } else
+    {
+      console.log("ERROR: Unkonwn update rule "+this._updaterule);
+    }
+
+    if (rv != PossibleDirections.STAY_PUT && rv != this._currentDirection)
+    {
+      this._reversalCount += 1;
+      this._currentDirection = rv;
+    }
+
+    return rv;
+  },
+
+  updateMixValues: function(correctAnswer) {
+    var direction = this.decideDirection(correctAnswer);
+
+    if (direction == PossibleDirections.AWAY_FROM_TARGET)
+    {
+      this._moveAwayFromTarget();
+    } else if (direction == PossibleDirections.TOWARDS_TARGET)
+    {
+      this._moveTowardsTarget();
+    }
+
+  },
 
 
   /**
@@ -598,39 +676,6 @@ var StaircaseTaskStore = Reflux.createStore({
     this._currentMix -= stepSize;
     //this._currentStaircaseTask.push(this._currentMix);
     console.log("Moved away from target...  " + this._currentMix);
-  },
-
-  _changeDirection: function() {
-    this._currentStairPhase++;
-    var noMoreIcons = this._currentIconNumber == this._totalNIcons
-    var hasEnoughSteps = this._currentStairPhase == this._nSteps;
-    console.log(this._currentStairPhase);
-    console.log(this._currentIconNumber);
-
-      // TODO: Log the last action...
-
-    // Case 1: The study is over!
-    if (noMoreIcons && hasEnoughSteps) {
-      alert('the study is complete! Thank you for participating :)');
-      this._currentMix = 0;
-    }
-
-    // Case 2: we've stairstepped to the end! Woo!
-    else if (hasEnoughSteps) {
-      // Log it! TODO
-      this._currentMix = 0;
-      this._approachingTarget = true;
-      this._currentIconNumber++;
-      this._currentlyPlayingPositionID = "none";
-      alert('task complete! Moving on to the next task now.');
-    }
-
-    // Case 3: Continue stairstepping :)
-    else {
-      this._approachingTarget = !this._approachingTarget;
-    }
-    //this._currentStaircaseTask.push(this._currentMix);  // not how we log anymore :/
-    console.log("changed direction at: " + this._currentMix);
   },
 
   _getCurrentTargetAmplitude: function(t) {
