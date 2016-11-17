@@ -633,16 +633,6 @@ var StaircaseTaskStore = Reflux.createStore({
     console.log("changed direction at: " + this._currentMix);
   },
 
-  _disableEqualButton: function() {
-    // TODO
-    document.getElementById("equal-button").className += " unavailable";
-  },
-
-  _disableNotEqualButton: function() {
-    // TODO
-    document.getElementById("not-equal-button").className += " unavailable";
-  },
-
   _getCurrentTargetAmplitude: function(t) {
     var i = this._iconPairings[this._currentIconNumber].target - 1;
     var ampData = waveData[i];
