@@ -73,34 +73,34 @@ var StaircaseTaskStore = Reflux.createStore({
     this._updaterule = UpdateRules.ONEUP_ONEDOWN;
 
     //TODO: Make this dependent on user input
-    this._pid = "bentest2";
+    this._pid = "newMixTest";
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
-    this._iconPairings = [{target:1, yours:2},
-                          {target:1, yours:3},
-                          {target:1, yours:4},
-                          {target:1, yours:5},
-                          {target:1, yours:6},
-                          {target:2, yours:1},
+    this._iconPairings = [//{target:1, yours:2},
+                          //{target:1, yours:3},
+                          //{target:1, yours:4},
+                          //{target:1, yours:5},
+                          //{target:1, yours:6},
+                          //{target:2, yours:1},
                           {target:2, yours:3},
-                          {target:2, yours:4},
-                          {target:2, yours:5},
+                          //{target:2, yours:4},
+                          //{target:2, yours:5},
                           {target:2, yours:6},
-                          {target:3, yours:1},
-                          {target:3, yours:2},
-                          {target:3, yours:4},
-                          {target:3, yours:5},
-                          {target:3, yours:6},
-                          {target:4, yours:1},
-                          {target:4, yours:2},
-                          {target:4, yours:3},
-                          {target:4, yours:5},
-                          {target:4, yours:6},
-                          {target:5, yours:1},
-                          {target:5, yours:2},
-                          {target:5, yours:3},
-                          {target:5, yours:4},
+                          //{target:3, yours:1},
+                          //{target:3, yours:2},
+                          //{target:3, yours:4},
+                          //{target:3, yours:5},
+                          //{target:3, yours:6},
+                          //{target:4, yours:1},
+                          //{target:4, yours:2},
+                          //{target:4, yours:3},
+                          //{target:4, yours:5},
+                          //{target:4, yours:6},
+                          //{target:5, yours:1},
+                          //{target:5, yours:2},
+                          //{target:5, yours:3},
+                          //{target:5, yours:4},
                           {target:5, yours:6},
                           {target:6, yours:1},
                           {target:6, yours:2},
@@ -181,9 +181,9 @@ var StaircaseTaskStore = Reflux.createStore({
 
     if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_TARGET)
     {
-      this.playTarget();
+      this.playMix(false);
     } else if (this._PositionID_Icon_Map[this._currentlyPlayingPositionID] == ICON_MIX) {
-      this.playMix();
+      this.playMix(true);
     } else {
       console.log("ERROR: Requesting unknown method of playing: " + this._PositionID_Icon_Map[this._currentlyPlayingPositionID]);
     }
@@ -256,7 +256,7 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   /**
-   *  "Play Yours" will play the current icon by:
+   *  "Play Mix" will play the current icon by:
    *    - stopping whatever else might be playing
    *    - changing this icon's class to "playing"
    *    - using the web-audio API to play the icon,
@@ -265,7 +265,7 @@ var StaircaseTaskStore = Reflux.createStore({
    *  Major credit to Oliver Schneider (UBC) for devising the way of
    *   playing the icon hi-fi with the web-audio api using and a buffer!
    **/
-  playMix: function() {
+  playMix: function(isMixNotTarget) {
 
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
@@ -492,8 +492,12 @@ var StaircaseTaskStore = Reflux.createStore({
     console.log('output nodes: ');
     console.log(outputNodes);
     var finalNodes = [];
-    var wave2value = this._currentMix;
-    var wave1value = 100 - wave2value;
+    if (isMixNotTarget) {
+      var wave2value = this._currentMix;
+      var wave1value = 100 - wave2value;
+    } else {
+      var wave2value = 100; wave1value = 0;
+    }
     for (var k=0; k<nNodes; k++) {
       var i = costNodes[k].i;
       var j = costNodes[k].j;
@@ -540,7 +544,7 @@ var StaircaseTaskStore = Reflux.createStore({
 
 		this._source.buffer = myAudioBuffer;
 		this._source.connect(audioCtx.destination);
-    this._source.id = "your-source";
+    this._source.id = "mix-source";
     this._source.onended = this._bufferOnEnded;
     this._source.start();
   },
@@ -649,7 +653,6 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   isBlockDone: function() {
-  console.log("reversal count: " + this._reversalCount); // benstuff
     return (this._reversalCount >= (NUMBER_OF_LARGESTEP_REVERSALS+NUMBER_OF_SMALLSTEP_REVERSALS));
   },
 
