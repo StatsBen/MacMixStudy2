@@ -69,6 +69,9 @@ var StaircaseTaskStore = Reflux.createStore({
     //TODO: Make this dependent on user input
     this._updaterule = UpdateRules.ONEUP_ONEDOWN;
 
+    //TODO: Make this dependent on user input
+    this._pid = "test";
+
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
     this._iconPairings = [{target:1, yours:2},
@@ -137,6 +140,8 @@ var StaircaseTaskStore = Reflux.createStore({
     this._PositionID_Icon_Map[positionIDs[0]] = ICON_TARGET;
     this._PositionID_Icon_Map[positionIDs[1]] = ICON_TARGET;
     this._PositionID_Icon_Map[positionIDs[2]] = ICON_MIX;
+
+    this._startTime = Date.now();
   },
 
   _resetPlayButtons: function() {
@@ -559,8 +564,54 @@ var StaircaseTaskStore = Reflux.createStore({
 
 
   doneTrial: function(correctAnswer) {
-    //TODO: Move this to firebase
-    console.log("doneTrial");
+
+    var doneTime = Date.now();
+    var trialTime = doneTime - this._startTime;
+    var trialTimeInStoLog = trialTime / 1000.0;
+    
+    var updateRuleToLog = "NA";
+    if (this._updaterule == UpdateRules.ONEUP_ONEDOWN)
+    {
+      updateRuleToLog = "OneUp_OneDown";
+    } else if (this._updaterule == UpdateRules.ONEUP_TWODOWN)
+    {
+      updateRuleToLog = "OneUp_TwoDown";
+    }
+
+    var responseToLog = correctAnswer ? "Mix" : "Target";
+    var positions = [
+                      this._PositionID_Icon_Map[1] == ICON_MIX ? "MIX" : "TARGET",
+                      this._PositionID_Icon_Map[2] == ICON_MIX ? "MIX" : "TARGET",
+                      this._PositionID_Icon_Map[3] == ICON_MIX ? "MIX" : "TARGET",
+                    ];
+
+    var targetPositionToLog = 0;
+    for (var i = 1; i < 3; i++) {
+      if (this._PositionID_Icon_Map[i] == ICON_MIX)
+      {
+        targetPositionToLog = i;
+      }
+    }
+
+    var toLog = {
+      timestamp:Date.now(),
+      pid:this._pid,
+      updaterule:updateRuleToLog,
+      block:this._currentIconNumber,
+      targetIcon:this._iconPairings[this._currentIconNumber-1].target,
+      mixIcon:this._iconPairings[this._currentIconNumber-1].yours,
+      mixAmount:this._currentMix,
+      position1:positions[0],
+      position2:positions[1],
+      position3:positions[2],
+      mixPosition:targetPositionToLog,
+      nReverals:this._reversalCount,
+      response:responseToLog,
+      correctResponse:correctAnswer,
+      trialTimeInS:trialTimeInStoLog
+    };
+
+    console.log(toLog);
 
     this.nextTrial(correctAnswer);
   },
