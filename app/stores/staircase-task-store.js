@@ -73,7 +73,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._updaterule = UpdateRules.ONEUP_ONEDOWN;
 
     //TODO: Make this dependent on user input
-    this._pid = "test";
+    this._pid = "bentest2";
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
@@ -644,10 +644,12 @@ var StaircaseTaskStore = Reflux.createStore({
       this._currentlyPlayingPositionID = null;
       this._previousAnswers = [];
       this._currentDirection = PossibleDirections.TOWARDS_TARGET;
+      this._reversalCount = 0;
       alert('task complete! Moving on to the next task now.');
   },
 
   isBlockDone: function() {
+  console.log("reversal count: " + this._reversalCount); // benstuff
     return (this._reversalCount >= (NUMBER_OF_LARGESTEP_REVERSALS+NUMBER_OF_SMALLSTEP_REVERSALS));
   },
 
@@ -724,7 +726,7 @@ var StaircaseTaskStore = Reflux.createStore({
     {
       stepSize = LARGESTEP_SIZE;
     }
-    
+
     return stepSize;
    },
 
