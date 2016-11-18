@@ -19,25 +19,52 @@ var LogStore = Reflux.createStore({
 
   init: function() {
 
-		/**   Here's the Firebase Credentials - Edit them here if using a
-		 *     different account or if you get a new key... etc.         **/
-		this._DatabaseName = "macaron-mix-ii-7868f";
-		this._ProjectID = "macaron-mix-ii-7868f";
-		this._APIKey = "AIzaSyCVdXzvIQWrYXp4JX_Zs9lmELybDTI0aw4";
-		this._URL = "https://" + this._DatabaseName + ".firebaseio.com";
-		this._Bucket = "";
-		this._pid = 1;     // TODO: Tweak manually for each study...
+  		// Initialize Firebase
+		  var config = {
+		    apiKey: "AIzaSyDjrQ1GP5VUosv5RBa609IPEcGere7Gx1I",
+		    authDomain: "macaronmixstudy2.firebaseapp.com",
+		    databaseURL: "https://macaronmixstudy2.firebaseio.com",
+		    storageBucket: "macaronmixstudy2.appspot.com",
+		    messagingSenderId: "85286530565"
+		  };
+		  Firebase.initializeApp(config);
 
-		// Initialize Firebase
-		var config = {
-		  apiKey: this._APIKey,
-		  authDomain: this._ProjectID + ".firebaseapp.com",
-		  databaseURL: "https://" + this._DatabaseName + ".firebaseio.com",
-		  storageBucket: "<BUCKET>.appspot.com",
-		};
 
-		firebase.initializeApp(config, "macmix");
-		//this._db =
+		  firebase.auth().signInWithEmailAndPassword('oschneid@cs.ubc.ca', '98wehfn9a0fy08wnr2309fu23-23nr8394yqfno3ewiuh').catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  console.log(errorMessage);
+		  // ...
+		});
+
+		  var database = Firebase.database();
+
+		  var dataRef = database.ref().child('test/');
+
+		  dataRef.set({foo:"bar"});
+
+
+
+		// /**   Here's the Firebase Credentials - Edit them here if using a
+		//  *     different account or if you get a new key... etc.         **/
+		// this._DatabaseName = "macaron-mix-ii-7868f";
+		// this._ProjectID = "macaron-mix-ii-7868f";
+		// this._APIKey = "AIzaSyCVdXzvIQWrYXp4JX_Zs9lmELybDTI0aw4";
+		// this._URL = "https://" + this._DatabaseName + ".firebaseio.com";
+		// this._Bucket = "";
+		// this._pid = 1;     // TODO: Tweak manually for each study...
+
+		// // Initialize Firebase
+		// var config = {
+		//   apiKey: this._APIKey,
+		//   authDomain: this._ProjectID + ".firebaseapp.com",
+		//   databaseURL: "https://" + this._DatabaseName + ".firebaseio.com",
+		//   storageBucket: "<BUCKET>.appspot.com",
+		// };
+
+		// firebase.initializeApp(config, "macmix");
+		// //this._db =
   },
 
 
