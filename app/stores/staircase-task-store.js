@@ -30,7 +30,11 @@ var UpdateRules = {
   ONEUP_TWODOWN: 1
 };
 
-var NUMBER_OF_REVERSALS = 12;
+
+var LARGESTEP_SIZE = 10; //out of 100
+var NUMBER_OF_LARGESTEP_REVERSALS = 3;
+var SMALLSTEP_SIZE = 3; // out of 100
+var NUMBER_OF_SMALLSTEP_REVERSALS = 12;
 
 var StaircaseTaskActions = Reflux.createActions([
   'selectPositionID',
@@ -51,7 +55,6 @@ var StaircaseTaskStore = Reflux.createStore({
     //this._studyRecord = [];
     //this._currentStaircaseTask = [];
     this._currentIconNumber = 1;  // counts up to 20
-    this._currentStairPhase = 1;  // counts up to 5
     this._reversalCount = 0;
     this._currentMix = 0;         // decrements and increments as they click
                                   //  equal and not-equal
@@ -645,7 +648,7 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   isBlockDone: function() {
-    return (this._reversalCount >= NUMBER_OF_REVERSALS);
+    return (this._reversalCount >= (NUMBER_OF_LARGESTEP_REVERSALS+NUMBER_OF_SMALLSTEP_REVERSALS));
   },
 
   isNextBlock: function() {
@@ -715,16 +718,24 @@ var StaircaseTaskStore = Reflux.createStore({
    * most of these are too short to merit extensive documentation...
    **/
 
+   _stepSize: function() {
+    var stepSize = SMALLSTEP_SIZE;
+    if (this._reversalCount < NUMBER_OF_LARGESTEP_REVERSALS)
+    {
+      stepSize = LARGESTEP_SIZE;
+    }
+    
+    return stepSize;
+   },
+
   _moveTowardsTarget: function() {
-    var stepSize = Math.round(10/this._currentStairPhase);
-    this._currentMix += stepSize;
+    this._currentMix = Math.max(0, Math.min(100, this._currentMix + this._stepSize()));
     //this._currentStaircaseTask.push(this._currentMix);
     console.log("made a step in the right direction!  " + this._currentMix);
   },
 
   _moveAwayFromTarget: function() {
-    var stepSize = Math.round(10/this._currentStairPhase);
-    this._currentMix -= stepSize;
+    this._currentMix = Math.max(0, Math.min(100, this._currentMix - this._stepSize()));
     //this._currentStaircaseTask.push(this._currentMix);
     console.log("Moved away from target...  " + this._currentMix);
   },
