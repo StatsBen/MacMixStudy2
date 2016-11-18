@@ -20,6 +20,7 @@ var LogStore = Reflux.createStore({
   init: function() {
 
   		// Initialize Firebase
+			console.log("initializing firebase");
 		  var config = {
 		    apiKey: "AIzaSyDjrQ1GP5VUosv5RBa609IPEcGere7Gx1I",
 		    authDomain: "macaronmixstudy2.firebaseapp.com",
@@ -30,19 +31,20 @@ var LogStore = Reflux.createStore({
 		  Firebase.initializeApp(config);
 
 
-		  firebase.auth().signInWithEmailAndPassword('oschneid@cs.ubc.ca', '98wehfn9a0fy08wnr2309fu23-23nr8394yqfno3ewiuh').catch(function(error) {
+		  Firebase.auth().signInWithEmailAndPassword('oschneid@cs.ubc.ca', '98wehfn9a0fy08wnr2309fu23-23nr8394yqfno3ewiuh').catch(function(error) {
 		  // Handle Errors here.
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
+			console.log("error code: ");
+			console.log(errorCode);
+			console.log("error message thing: ");
 		  console.log(errorMessage);
-		  // ...
-		});
+			//...
+			});
 
-		  var database = Firebase.database();
+		  this._database = Firebase.database();
+			this._recordNumber = 0;
 
-		  var dataRef = database.ref().child('test/');
-
-		  dataRef.set({foo:"bar"});
 
 
 
@@ -68,8 +70,11 @@ var LogStore = Reflux.createStore({
   },
 
 
-  log: function(button, mix, participant, iconNumber) {
-		console.log('logged: ' + button + mix.toString() + participant + iconNumber, Date.now());
+  log: function(recordBlob, pid) {
+		var recordID = pid + "-" + this._recordNumber.toString();
+		var dataRef = this._database.ref().child(pid).child(recordID);
+	  dataRef.set(recordBlob);
+		this._recordNumber++;
   }
 
 });

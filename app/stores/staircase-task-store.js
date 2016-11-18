@@ -110,7 +110,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._assignRandomPositionIDIconMap();
 
     console.log(this._studyRecord);
-    LogStore.actions.log("begin", this._currentMix, "p", this._currentIconNumber);
+    LogStore.actions.log("begin", this._pid);
   },
 
   _fisher_yates_shuffle: function (array) {
@@ -196,7 +196,7 @@ var StaircaseTaskStore = Reflux.createStore({
    *    - reset that all when it's done!
    **/
   playTarget: function() {
-    
+
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 		var trackLength = 3; //s
 		var channels = 1; // Standard mono-audio
@@ -568,7 +568,7 @@ var StaircaseTaskStore = Reflux.createStore({
     var doneTime = Date.now();
     var trialTime = doneTime - this._startTime;
     var trialTimeInStoLog = trialTime / 1000.0;
-    
+
     var updateRuleToLog = "NA";
     if (this._updaterule == UpdateRules.ONEUP_ONEDOWN)
     {
@@ -611,7 +611,7 @@ var StaircaseTaskStore = Reflux.createStore({
       trialTimeInS:trialTimeInStoLog
     };
 
-    console.log(toLog);
+    LogStore.actions.log(toLog, this._pid);
 
     this.nextTrial(correctAnswer);
   },
