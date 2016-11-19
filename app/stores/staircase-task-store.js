@@ -68,9 +68,10 @@ var StaircaseTaskStore = Reflux.createStore({
 
     //update rules initiation
     this._previousAnswers = [];
+    this._previousMixes = [];
     this._currentDirection = PossibleDirections.TOWARDS_TARGET;
     //TODO: Make this dependent on user input
-    this._updaterule = UpdateRules.ONEUP_ONEDOWN;
+    this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
     //TODO: Make this dependent on user input
     this._pid = "newMixTest";
@@ -647,6 +648,7 @@ var StaircaseTaskStore = Reflux.createStore({
       this._currentIconNumber++;
       this._currentlyPlayingPositionID = null;
       this._previousAnswers = [];
+      this._previousMixes = [];
       this._currentDirection = PossibleDirections.TOWARDS_TARGET;
       this._reversalCount = 0;
       alert('task complete! Moving on to the next task now.');
@@ -667,6 +669,7 @@ var StaircaseTaskStore = Reflux.createStore({
 
   decideDirection: function(correctAnswer) {
     this._previousAnswers.push(correctAnswer);
+    this._previousMixes.push(this._currentMix);
     var listLength = this._previousAnswers.length;
 
     var rv = PossibleDirections.STAY_PUT;
@@ -683,7 +686,7 @@ var StaircaseTaskStore = Reflux.createStore({
     } else if (this._updaterule == UpdateRules.ONEUP_TWODOWN)
     {
       if (this._previousAnswers.length > 1) {
-        if(this._previousAnswers[listLength-1] && this._previousAnswers[listLength-2])
+        if(this._previousAnswers[listLength-1] && this._previousAnswers[listLength-2] && (this._previousMixes[listLength-2] == this._currentMix))
         {
           rv = PossibleDirections.TOWARDS_TARGET;
         } else if (!this._previousAnswers[listLength-1]) {
