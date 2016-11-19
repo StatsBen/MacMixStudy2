@@ -70,10 +70,10 @@ var StaircaseTaskStore = Reflux.createStore({
     this._previousAnswers = [];
     this._currentDirection = PossibleDirections.TOWARDS_TARGET;
     //TODO: Make this dependent on user input
-    this._updaterule = UpdateRules.ONEUP_ONEDOWN;
+    this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
     //TODO: Make this dependent on user input
-    this._pid = "benJNDtest2";
+    this._pid = "debug";
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
@@ -119,18 +119,18 @@ var StaircaseTaskStore = Reflux.createStore({
   _fisher_yates_shuffle: function (array) {
     //from https://www.frankmitchell.org/2015/01/fisher-yates/
     //also widely available elsewhere, e.g., Knuth
-  var i = 0;
-  var j = 0;
-  var temp = null;
+    var i = 0;
+    var j = 0;
+    var temp = null;
 
-  for (i = array.length - 1; i > 0; i -= 1) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
+    for (i = array.length - 1; i > 0; i -= 1) {
+      j = Math.floor(Math.random() * (i + 1));
+      temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
 
-},
+  },
 
   _assignRandomPositionIDIconMap: function() {
 
@@ -304,9 +304,9 @@ var StaircaseTaskStore = Reflux.createStore({
     var t1 = 0;  var t2 = 0;
     var j1 = 0;  var j2 = 0;
 
-    console.log('mixing icons: ' + iconInd1 + ' and ' + iconInd2);
-    console.log(wave1Amps);
-    console.log(wave2Amps);
+    // console.log('mixing icons: ' + iconInd1 + ' and ' + iconInd2);
+    // console.log(wave1Amps);
+    // console.log(wave2Amps);
 
     /** Partitioning the waveform amplitude **/
     while(t1 <= duration1) {
@@ -374,7 +374,7 @@ var StaircaseTaskStore = Reflux.createStore({
     }
     var max1 = Math.max.apply(null, partitionedAmps1);
     var max2 = Math.max.apply(null, partitionedAmps2);
-    console.log(partitionedAmps1); console.log(partitionedAmps2);
+    // console.log(partitionedAmps1); console.log(partitionedAmps2);
 
     /** Computing the Cost Matrix **/
     var costMatrix = new Array(n1 * n2);
@@ -442,7 +442,7 @@ var StaircaseTaskStore = Reflux.createStore({
         }
       }
     }
-    console.log(costNodes);
+    // console.log(costNodes);
 
     /** Find all edges to form keyframe pairings **/
     var k = 0;
@@ -489,8 +489,8 @@ var StaircaseTaskStore = Reflux.createStore({
       k++;
     }
 
-    console.log('output nodes: ');
-    console.log(outputNodes);
+    // console.log('output nodes: ');
+    // console.log(outputNodes);
     var finalNodes = [];
     if (isMixNotTarget) {
       var wave2value = this._currentMix;
@@ -511,8 +511,8 @@ var StaircaseTaskStore = Reflux.createStore({
       var newV = (wave1value*iV*0.01) + (wave2value*jV*0.01);
       finalNodes.push({id:12, t:newT, value:newV, selected:false});
     }
-    console.log('final nodes: ');
-    console.log(finalNodes);
+    // console.log('final nodes: ');
+    // console.log(finalNodes);
 
 
 		// calculate the speaker displacement at each frame
@@ -547,6 +547,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._source.id = "mix-source";
     this._source.onended = this._bufferOnEnded;
     this._source.start();
+    console.log('isMixNotTarget?: ' + isMixNotTarget); // for cheating ;)
   },
 
 
@@ -667,8 +668,11 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   decideDirection: function(correctAnswer) {
+    console.log("deciding direction... ... ...");
     this._previousAnswers.push(correctAnswer);
+    console.log("correct answer: " + correctAnswer);
     var listLength = this._previousAnswers.length;
+    console.log("Previous ansers: " + this._previousAnswers);
 
     var rv = PossibleDirections.STAY_PUT;
 
@@ -687,6 +691,7 @@ var StaircaseTaskStore = Reflux.createStore({
         if(this._previousAnswers[listLength-1] && this._previousAnswers[listLength-2])
         {
           rv = PossibleDirections.TOWARDS_TARGET;
+          this._previousAnswers.push(false); this._previousAnswers.push(false);
         } else if (!this._previousAnswers[listLength-1]) {
           rv = PossibleDirections.AWAY_FROM_TARGET;
         }
