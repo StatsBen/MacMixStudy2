@@ -657,7 +657,7 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   isNextBlock: function() {
-    return (this._currentIconNumber >= this._iconPairings.length);
+    return (this._currentIconNumber <= this._iconPairings.length);
   },
 
   doneStudy: function() {
