@@ -73,7 +73,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
     //TODO: Make this dependent on user input
-    this._pid = "debug";
+    this._pid = "benJNDtest4";
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
@@ -89,7 +89,7 @@ var StaircaseTaskStore = Reflux.createStore({
                           //{target:2, yours:6},
                           //{target:3, yours:1},
                           //{target:3, yours:2},
-                          //{target:3, yours:4},
+                          {target:3, yours:4},
                           //{target:3, yours:5},
                           //{target:3, yours:6},
                           //{target:4, yours:1},
