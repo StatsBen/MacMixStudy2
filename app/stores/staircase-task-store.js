@@ -34,7 +34,9 @@ var UpdateRules = {
 var LARGESTEP_SIZE = 10; //out of 100
 var NUMBER_OF_LARGESTEP_REVERSALS = 3;
 var SMALLSTEP_SIZE = 3; // out of 100
-var NUMBER_OF_SMALLSTEP_REVERSALS = 12;
+var NUMBER_OF_SMALLSTEP_REVERSALS = 10;
+var DIRECTION = "forward";
+// var DIRECTION = "reverse";
 
 var StaircaseTaskActions = Reflux.createActions([
   'selectPositionID',
@@ -77,37 +79,20 @@ var StaircaseTaskStore = Reflux.createStore({
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
-    this._iconPairings = [//{target:1, yours:2},
-                          //{target:1, yours:3},
-                          //{target:1, yours:4},
-                          //{target:1, yours:5},
-                          //{target:1, yours:6},
-                          //{target:2, yours:1},
-                          //{target:2, yours:3},
-                          //{target:2, yours:4},
-                          //{target:2, yours:5},
-                          //{target:2, yours:6},
-                          //{target:3, yours:1},
-                          //{target:3, yours:2},
-                          {target:3, yours:4},
-                          //{target:3, yours:5},
-                          //{target:3, yours:6},
-                          //{target:4, yours:1},
-                          //{target:4, yours:2},
-                          //{target:4, yours:3},
-                          //{target:4, yours:5},
-                          //{target:4, yours:6},
-                          //{target:5, yours:1},
-                          //{target:5, yours:2},
-                          //{target:5, yours:3},
-                          //{target:5, yours:4},
-                          {target:5, yours:6},
-                          {target:6, yours:1},
-                          {target:6, yours:2},
-                          {target:6, yours:3},
-                          {target:6, yours:4},
-                          {target:6, yours:5},
-                        ];
+    if (DIRECTION == "reverse") {
+      this._iconPairings = [
+        {target:4, yours:3},
+        {target:5, yours:2},
+        {target:6, yours:5}
+      ];
+    }
+    else {  // i.e. DIRECTION == "forward" ...
+      this._iconPairings = [
+        {target:3, yours:4},
+        {target:2, yours:5},
+        {target:5, yours:6}
+      ];
+    }
 
     //this function is idempotent, and used for initialization of the position ID -> Icon Map
     this._assignRandomPositionIDIconMap();
@@ -568,6 +553,7 @@ var StaircaseTaskStore = Reflux.createStore({
       this.doneTrial(correctAnswer);
     }
 
+    this._highlightSelectedIcon(positionID);
   },
 
 
@@ -803,6 +789,36 @@ var StaircaseTaskStore = Reflux.createStore({
    } // End of the amplitude search
    return amp;
 
+  },
+
+  _highlightSelectedIcon: function(positionID) {
+    var notID1 = ((positionID) % 3) + 1;
+    var notID2 = ((positionID + 1) % 3) + 1;
+    var notButt1 = document.getElementById("selectbutton-" + notID1);
+    var notButt2 = document.getElementById("selectbutton-" + notID2);
+    var selectButton = document.getElementById("selectbutton-" + positionID);
+    var id = setInterval(frame, 5);
+    var counter = 0;
+    var originalBackground1 = selectButton.style.background;
+    var originalBackground2 = notButt1.style.background;
+    var originalBackground3 = notButt2.style.background;
+
+    function frame() {
+      if (counter == 80) {
+        selectButton.style.background = originalBackground1;
+        notButt1.style.background = originalBackground2;
+        notButt2.style.background = originalBackground3;
+        clearInterval(id);
+      }
+      else if (counter == 0) {
+        selectButton.style.background = 'orange';
+        notButt1.style.background = "#777777";
+        notButt2.style.background = '#777777';
+        counter++;
+      } else {
+        counter++;
+      }
+    }
   },
 
   _isEven: function(x) {

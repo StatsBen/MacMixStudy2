@@ -23,7 +23,7 @@ var SelectButton = React.createClass({
     return(
       <div id={"selectbutton-"+this.props.positionID}
            className="select-button"
-           onClick={this._handleClick}>
+           onDoubleClick={this._handleClick}>
         <p id={"selectbutton-"+this.props.positionID+"-text"}
            className="select-button-text">
           This is the odd one out.

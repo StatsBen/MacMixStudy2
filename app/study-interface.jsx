@@ -19,9 +19,10 @@ var StudyInterface = React.createClass({
   render: function() {
     return(
       <div id="app">
-      <p>Double Click on either your icon or the target icon to play it.</p>
-      <p>Then click on either the equal or not-equal buttons according to whether or not you think your icon is the same as the target icon.</p>
-      <p>When a button is not able to be clicked, it will go dark and gray.</p>
+      <p>Your task is to find out which of the following icons is not like the others.</p>
+      <p>To feel an icon, double click the large rectangle in the top row.</p>
+      <p>When you find which of the icons is not like the others, click on the smaller rectangle that represents it in the second row.</p>
+      <p>When you finish the task, a congratulatroy pop-up window will appear. These tasks typically take 8-15 minutes to complete, so it may feel like it's taking a long time to finish, but just keep at it!</p>
         <StaircaseTask />
       </div>
     );
