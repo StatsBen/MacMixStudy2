@@ -35,12 +35,13 @@ var LARGESTEP_SIZE = 10; //out of 100
 var NUMBER_OF_LARGESTEP_REVERSALS = 3;
 var SMALLSTEP_SIZE = 3; // out of 100
 var NUMBER_OF_SMALLSTEP_REVERSALS = 10;
-var DIRECTION = "forward";
-// var DIRECTION = "reverse";
+// var DIRECTION = "forward";
+var DIRECTION = "reverse";
 
 var StaircaseTaskActions = Reflux.createActions([
   'selectPositionID',
-  'playPositionID'
+  'playPositionID',
+  'updateTrialCounter'
 ]);
 
 var StaircaseTaskStore = Reflux.createStore({
@@ -54,12 +55,19 @@ var StaircaseTaskStore = Reflux.createStore({
    *     the course of the study.
    **/
   init: function() {
+
+    //TODO: Make this dependent on user input
+    this._pid = "pilot09";
+
+
     //this._studyRecord = [];
     //this._currentStaircaseTask = [];
     this._currentIconNumber = 1;  // counts up to 20
     this._reversalCount = 0;
     this._currentMix = 0;         // decrements and increments as they click
                                   //  equal and not-equal
+    this._nTrialsCounter = 0;
+    this._nTasksCounter = 0;
 
     //this._globalTStart = new Date().getTime()/(1000*60); //minutes since epoch
     //this._currentTStart = new Date().getTime()/(1000*60);
@@ -73,9 +81,6 @@ var StaircaseTaskStore = Reflux.createStore({
     this._currentDirection = PossibleDirections.TOWARDS_TARGET;
     //TODO: Make this dependent on user input
     this._updaterule = UpdateRules.ONEUP_TWODOWN;
-
-    //TODO: Make this dependent on user input
-    this._pid = "benJNDtest4";
 
     //this._studyRecord.push("begin study");
     //this._studyRecord.push(this._globalTStart);
@@ -551,9 +556,9 @@ var StaircaseTaskStore = Reflux.createStore({
 
     if (correctAnswer != null) {
       this.doneTrial(correctAnswer);
+      this._highlightSelectedIcon(positionID);
+      this.updateTrialCounter();
     }
-
-    this._highlightSelectedIcon(positionID);
   },
 
 
@@ -562,6 +567,7 @@ var StaircaseTaskStore = Reflux.createStore({
     var doneTime = Date.now();
     var trialTime = doneTime - this._startTime;
     var trialTimeInStoLog = trialTime / 1000.0;
+    this._nTrialsCounter++;
 
     var updateRuleToLog = "NA";
     if (this._updaterule == UpdateRules.ONEUP_ONEDOWN)
@@ -636,6 +642,9 @@ var StaircaseTaskStore = Reflux.createStore({
       this._previousAnswers = [];
       this._currentDirection = PossibleDirections.TOWARDS_TARGET;
       this._reversalCount = 0;
+      this._nTasksCounter++;
+      this._nTrialsCounter = 0;
+
       alert('task complete! Moving on to the next task now.');
   },
 
@@ -804,7 +813,7 @@ var StaircaseTaskStore = Reflux.createStore({
     var originalBackground3 = notButt2.style.background;
 
     function frame() {
-      if (counter == 80) {
+      if (counter == 70) {
         selectButton.style.background = originalBackground1;
         notButt1.style.background = originalBackground2;
         notButt2.style.background = originalBackground3;
@@ -819,6 +828,17 @@ var StaircaseTaskStore = Reflux.createStore({
         counter++;
       }
     }
+  },
+
+  updateTrialCounter: function() {
+    var trialTextElement = document.getElementById("n-trials-text");
+    var tasksTextElement = document.getElementById("n-tasks-text");
+    var trialText = this._nTrialsCounter + " trials completed.";
+    var tasksText = this._nTasksCounter + " of ";
+    tasksText +=    this._iconPairings.length + " tasks complete.";
+    trialTextElement.innerHTML = trialText;
+    tasksTextElement.innerHTML = tasksText;
+    console.log("stuff clogged...");
   },
 
   _isEven: function(x) {

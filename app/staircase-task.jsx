@@ -13,11 +13,19 @@ var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
 var StaircaseTask = React.createClass({
 
+  componentDidMount() {
+    StaircaseTaskStore.actions.updateTrialCounter();
+  },
+
   render: function() {
     return(
       <div id="staircase-task">
         <h2 id="staircase-task-header">Matching Task</h2>
-        
+        <div id="counter-container">
+          <p id="n-tasks-text" className="counter-text"></p>
+          <p id="n-trials-text" className="counter-text"></p>
+        </div>
+
         <div id="playbutton-player-container">
           <div className="button-container">
             <PlayButton positionID={1} />
