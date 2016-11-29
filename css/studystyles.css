@@ -132,10 +132,6 @@ background: #777777;
   background: #FDFFCC;
 }
 
-.select-button:active {
-  background: orange;
-}
-
 .select-button-text {
   display: block;
   float:left;
@@ -160,6 +156,15 @@ background: #777777;
   float: left;
   width: 30%;
   height: 100%;
+}
+
+.instruction {
+  display: block;
+  float: none;
+  clear: both;
+  width: 70%;
+  margin: 20px 0 30px 15%;
+  text-align: justify;
 }
 
 
@@ -215,3 +220,19 @@ background: #777777;
   padding: 0;
 }
 
+#counter-container {
+  display: inline;
+  position: absolute;
+  width: 350px;
+  height: 50px;
+  margin: -50px 0px 0 0;
+  padding: 0;
+  z-index: 9;
+}
+
+#counter-container p {
+  float: left;
+  margin: 0;
+  width: 175px;
+  color: #999999;
+}
