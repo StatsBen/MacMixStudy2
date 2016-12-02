@@ -57,7 +57,7 @@ var StaircaseTaskStore = Reflux.createStore({
   init: function() {
 
     //TODO: Make this dependent on user input
-    this._pid = "pilot09";
+    this._pid = "testBucket";
 
 
     //this._studyRecord = [];
@@ -82,22 +82,20 @@ var StaircaseTaskStore = Reflux.createStore({
     //TODO: Make this dependent on user input
     this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
-    //this._studyRecord.push("begin study");
-    //this._studyRecord.push(this._globalTStart);
-    if (DIRECTION == "reverse") {
-      this._iconPairings = [
-        {target:4, yours:3},
-        {target:5, yours:2},
-        {target:6, yours:5}
-      ];
-    }
-    else {  // i.e. DIRECTION == "forward" ...
-      this._iconPairings = [
-        {target:3, yours:4},
-        {target:2, yours:5},
-        {target:5, yours:6}
-      ];
-    }
+    var iconPairings = [
+      {target:4, yours:3},
+      {target:5, yours:2},
+      {target:6, yours:5}
+    ];
+
+    this._iconPairings = this._fisher_yates_shuffle2(iconPairings);
+    var reversePairing = [
+    // Un-Comment the desired reverse-pairing here!! TODO
+     {target:3, yours:4}
+    // {target:2, yours:5}
+    // {target:5, yours:6}
+    ];
+    this._iconPairings.push(reversePairing);
 
     //this function is idempotent, and used for initialization of the position ID -> Icon Map
     this._assignRandomPositionIDIconMap();
@@ -106,6 +104,7 @@ var StaircaseTaskStore = Reflux.createStore({
     LogStore.actions.log("begin", this._pid);
   },
 
+  /** Randomizes Array in Place **/
   _fisher_yates_shuffle: function (array) {
     //from https://www.frankmitchell.org/2015/01/fisher-yates/
     //also widely available elsewhere, e.g., Knuth
@@ -119,6 +118,25 @@ var StaircaseTaskStore = Reflux.createStore({
       array[i] = array[j];
       array[j] = temp;
     }
+
+  },
+
+  /** Returns a New, Randomized Array of the Same Elements **/
+  _fisher_yates_shuffle2: function (array) {
+    //from https://www.frankmitchell.org/2015/01/fisher-yates/
+    //also widely available elsewhere, e.g., Knuth
+    var i = 0;
+    var j = 0;
+    var temp = null;
+
+    for (i = array.length - 1; i > 0; i -= 1) {
+      j = Math.floor(Math.random() * (i + 1));
+      temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+
+    return(array);
 
   },
 
@@ -645,7 +663,7 @@ var StaircaseTaskStore = Reflux.createStore({
       this._nTasksCounter++;
       this._nTrialsCounter = 0;
 
-      alert('task complete! Moving on to the next task now.');
+      alert('task complete! Moving on to the next task now. If you would like to take a short break, now is a great time :)');
   },
 
   isBlockDone: function() {
@@ -801,44 +819,44 @@ var StaircaseTaskStore = Reflux.createStore({
   },
 
   _highlightSelectedIcon: function(positionID) {
-    var notID1 = ((positionID) % 3) + 1;
-    var notID2 = ((positionID + 1) % 3) + 1;
-    var notButt1 = document.getElementById("selectbutton-" + notID1);
-    var notButt2 = document.getElementById("selectbutton-" + notID2);
-    var selectButton = document.getElementById("selectbutton-" + positionID);
-    var id = setInterval(frame, 5);
+    // var notID1 = ((positionID) % 3) + 1;
+    // var notID2 = ((positionID + 1) % 3) + 1;
+    // var notButt1 = document.getElementById("selectbutton-" + notID1);
+    // var notButt2 = document.getElementById("selectbutton-" + notID2);
+    // var selectButton = document.getElementById("selectbutton-" + positionID);
+    // var originalBackground1 = selectButton.style.background;
+    // var originalBackground2 = notButt1.style.background;
+    // var originalBackground3 = notButt2.style.background;
+    var trialTextElement = document.getElementById("n-trials-text");
     var counter = 0;
-    var originalBackground1 = selectButton.style.background;
-    var originalBackground2 = notButt1.style.background;
-    var originalBackground3 = notButt2.style.background;
+    var id = setInterval(frame, 5);
 
     function frame() {
-      if (counter == 70) {
-        selectButton.style.background = originalBackground1;
-        notButt1.style.background = originalBackground2;
-        notButt2.style.background = originalBackground3;
+      if (counter == 100) {
+        // selectButton.style.background = originalBackground1;
+        // notButt1.style.background = originalBackground2;
+        // notButt2.style.background = originalBackground3;
         clearInterval(id);
       }
       else if (counter == 0) {
-        selectButton.style.background = 'orange';
-        notButt1.style.background = "#777777";
-        notButt2.style.background = '#777777';
+        // selectButton.style.background = 'orange';
+        // notButt1.style.background = "#777777";
+        // notButt2.style.background = '#777777';
         counter++;
       } else {
+        var op = (99 - counter) / 100;
+        var opac = Math.pow(op, 0.5);
+        trialTextElement.style.opacity = opac;
         counter++;
       }
     }
   },
 
   updateTrialCounter: function() {
-    var trialTextElement = document.getElementById("n-trials-text");
     var tasksTextElement = document.getElementById("n-tasks-text");
-    var trialText = this._nTrialsCounter + " trials completed.";
     var tasksText = this._nTasksCounter + " of ";
     tasksText +=    this._iconPairings.length + " tasks complete.";
-    trialTextElement.innerHTML = trialText;
     tasksTextElement.innerHTML = tasksText;
-    console.log("stuff clogged...");
   },
 
   _isEven: function(x) {

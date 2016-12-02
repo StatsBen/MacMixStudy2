@@ -15,6 +15,8 @@ var StaircaseTask = React.createClass({
 
   componentDidMount() {
     StaircaseTaskStore.actions.updateTrialCounter();
+    var trialTextElement = document.getElementById("n-trials-text");
+    trialTextElement.style.opacity = 0;
   },
 
   render: function() {
@@ -23,7 +25,7 @@ var StaircaseTask = React.createClass({
         <h2 id="staircase-task-header">Matching Task</h2>
         <div id="counter-container">
           <p id="n-tasks-text" className="counter-text"></p>
-          <p id="n-trials-text" className="counter-text"></p>
+          <p id="n-trials-text" className="counter-text">Trial Recorded :)</p>
         </div>
 
         <div id="playbutton-player-container">

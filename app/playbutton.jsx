@@ -11,7 +11,7 @@ var StaircaseTaskStore = require('./stores/staircase-task-store.js');
 
 var PlayButton = React.createClass({
 
-  
+
   propTypes: {
     positionID : React.PropTypes.number.isRequired
       },

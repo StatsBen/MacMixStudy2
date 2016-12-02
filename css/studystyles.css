@@ -49,8 +49,8 @@ p {
   display: block;
   position: relative;
   width: 80%;
-  height: 60px;
-  margin: auto;
+  height: 70px;
+  margin-left: 50px;
   padding: 1px;
   text-align: center;
   background: #CCCCCC;
@@ -115,9 +115,10 @@ background: #777777;
   float:left;
   position: relative;
   width: 80%;
-  height: auto;
+  height: 70px;
   padding: 0;
   margin-top: 10%;
+  margin-left: 50px;
   text-align: center;
   background: #CCCCCC;
   border-radius: 5px;
@@ -200,7 +201,7 @@ background: #777777;
   display: block;
   position: relative;
   width: 80%;
-  height: 200px;
+  height: 250px;
   margin-left: 10%;
   padding: 10px;
   background: #EEEEEE;
@@ -230,9 +231,20 @@ background: #777777;
   z-index: 9;
 }
 
+#counter-container {
+  color: #999999;
+}
+
 #counter-container p {
   float: left;
   margin: 0;
   width: 175px;
-  color: #999999;
+}
+
+#n-trials-text {
+  text-shadow: 2px 2px rgba(114,252,96,0.5);
+}
+
+#counter-container p#n-trials-text {
+  color: rgb(126,221,55);
 }

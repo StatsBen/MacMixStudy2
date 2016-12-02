@@ -20,9 +20,9 @@ var StudyInterface = React.createClass({
     return(
       <div id="app">
       <p className="instruction">Your task is to find out which of the following icons is not like the others.</p>
-      <p className="instruction">To feel an icon, double click the large rectangle in the top row.</p>
-      <p className="instruction">When you find which of the icons is not like the others, double click on the smaller rectangle that represents it in the second row.</p>
-      <p className="instruction">When you finish the task, a congratulatroy pop-up window will appear. These tasks typically take 8-15 minutes to complete, so it may feel like it's taking a long time to finish, but just keep at it!</p>
+      <p className="instruction">To feel an icon, <b>double click</b> the large rectangle in the top row.</p>
+      <p className="instruction">When you find which of the icons is not like the others, please <b>double click</b> on the smaller button that corresponds to the odd-one-out in the second row.</p>
+      <p className="instruction">When you finish the task, a congratulatroy pop-up window will appear. Hooray!</p>
         <StaircaseTask />
       </div>
     );
