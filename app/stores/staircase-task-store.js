@@ -57,7 +57,7 @@ var StaircaseTaskStore = Reflux.createStore({
   init: function() {
 
     //TODO: Make this dependent on user input
-    this._pid = "testBucket";
+    this._pid = "participant05";
 
 
     //this._studyRecord = [];
@@ -83,17 +83,17 @@ var StaircaseTaskStore = Reflux.createStore({
     this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
     var iconPairings = [
-      {target:4, yours:3},
+      {target:3, yours:4},  //,
       {target:5, yours:2},
-      {target:6, yours:5}
+      {target:5, yours:6}
     ];
 
     this._iconPairings = this._fisher_yates_shuffle2(iconPairings);
     var reversePairing = [
     // Un-Comment the desired reverse-pairing here!! TODO
-     {target:3, yours:4}
-    // {target:2, yours:5}
-    // {target:5, yours:6}
+    // {target:3, yours:4}
+     {target:2, yours:5},
+     {target:5, yours:6}
     ];
     this._iconPairings.push(reversePairing);
 
