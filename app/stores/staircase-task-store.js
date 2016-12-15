@@ -57,7 +57,7 @@ var StaircaseTaskStore = Reflux.createStore({
   init: function() {
 
     //TODO: Make this dependent on user input
-    this._pid = "participant05";
+    this._pid = "participant09";
 
 
     //this._studyRecord = [];
@@ -83,7 +83,7 @@ var StaircaseTaskStore = Reflux.createStore({
     this._updaterule = UpdateRules.ONEUP_TWODOWN;
 
     var iconPairings = [
-      {target:3, yours:4},  //,
+      {target:4, yours:3},
       {target:5, yours:2},
       {target:5, yours:6}
     ];
@@ -91,11 +91,14 @@ var StaircaseTaskStore = Reflux.createStore({
     this._iconPairings = this._fisher_yates_shuffle2(iconPairings);
     var reversePairing = [
     // Un-Comment the desired reverse-pairing here!! TODO
-    // {target:3, yours:4}
-     {target:2, yours:5},
-     {target:5, yours:6}
+      {target:2, yours:5},
+      //{target:3, yours:4},
+      //{target:5, yours:6},
+      {dummy: 12, dummy2:12}
     ];
-    this._iconPairings.push(reversePairing);
+
+    this._iconPairings.push(reversePairing[1]);
+    this._iconPairings.push(reversePairing[2]);
 
     //this function is idempotent, and used for initialization of the position ID -> Icon Map
     this._assignRandomPositionIDIconMap();
